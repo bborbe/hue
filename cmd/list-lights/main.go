@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/bborbe/hue/pkg"
+	"github.com/golang/glog"
 	"github.com/pkg/errors"
 )
 
@@ -28,9 +28,9 @@ func (a *application) Run(ctx context.Context) error {
 	if err != nil {
 		return errors.Wrap(err, "get lights failed")
 	}
-	fmt.Printf("found %d lights\n", len(lights))
+	glog.Infof("found %d lights", len(lights))
 	for _, light := range lights {
-		fmt.Printf("'%s' on: %v\n", light.Name, light.State.On)
+		glog.Infof("'%s' on: %v", light.Name, light.IsOn())
 	}
 	return nil
 }

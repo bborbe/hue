@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/golang/glog"
 	"os"
 
 	"github.com/bborbe/hue/pkg"
+	"github.com/golang/glog"
 	"github.com/pkg/errors"
 )
 
@@ -24,18 +24,18 @@ func (a *application) Run(ctx context.Context) error {
 	if err != nil {
 		return errors.Wrap(err, "get bridge failed")
 	}
-	lights, err := bridge.GetLightsContext(ctx)
+
+	light, err := pkg.LightByName(ctx, bridge, pkg.LightName(a.Light))
 	if err != nil {
-		return errors.Wrap(err, "get lights failed")
+		return err
 	}
-	for _, light := range lights {
-		if light.Name == a.Light {
-			glog.V(2).Info("found light")
-			if err := light.OnContext(ctx); err != nil {
-				return errors.Wrap(err, "turn on light failed")
-			}
-			glog.Infof("light turned on")
-		}
+	if light.IsOn() {
+		glog.V(2).Info("light already on")
+		return nil
 	}
+	if err := light.OnContext(ctx); err != nil {
+		return errors.Wrap(err, "turn on light failed")
+	}
+	glog.Infof("light turned on")
 	return nil
 }

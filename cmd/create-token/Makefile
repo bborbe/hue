@@ -1,3 +1,4 @@
 run:
 	go run main.go \
-	-name=bborbe
+	-name=bborbe \
+	-v=2
