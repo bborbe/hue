@@ -1,14 +1,25 @@
 package pkg
 
 import (
+	"context"
 	"fmt"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type TimeOfDay struct {
-	Hour   int
-	Minute int
-	Second int
+	Hour     int
+	Minute   int
+	Second   int
+	Location *time.Location
+}
+
+func (t TimeOfDay) Validate(ctx context.Context) error {
+	if t.Location == nil {
+		return errors.New("location missing")
+	}
+	return nil
 }
 
 func (t TimeOfDay) String() string {
@@ -16,7 +27,7 @@ func (t TimeOfDay) String() string {
 }
 
 func (t TimeOfDay) Duration(now time.Time) time.Duration {
-	nextTick := time.Date(now.Year(), now.Month(), now.Day(), t.Hour, t.Minute, t.Second, 0, time.Local)
+	nextTick := time.Date(now.Year(), now.Month(), now.Day(), t.Hour, t.Minute, t.Second, 0, t.Location)
 	if !nextTick.After(now) {
 		nextTick = nextTick.Add(24 * time.Hour)
 	}

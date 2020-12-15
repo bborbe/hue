@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/amimof/huego"
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/check"
 	"github.com/golang/glog"
@@ -45,11 +44,11 @@ func (a *application) Run(ctx context.Context) error {
 }
 
 func (a *application) runChecks(ctx context.Context) error {
-	bridge, err := pkg.GetBridge(ctx, pkg.Token(a.Token))
+	checks, err := a.buildChecks(ctx)
 	if err != nil {
-		return errors.Wrap(err, "get bridge failed")
+		return errors.Wrap(err, "builds checks failed")
 	}
-	for _, check := range a.buildChecks(bridge) {
+	for _, check := range checks {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
@@ -72,37 +71,51 @@ func (a *application) runChecks(ctx context.Context) error {
 	return nil
 }
 
-func (a *application) buildChecks(bridge *huego.Bridge) check.Checks {
+func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
+	loc, err := time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		return nil, errors.Wrap(err, "load location failed")
+	}
+	bridge, err := pkg.GetBridge(ctx, pkg.Token(a.Token))
+	if err != nil {
+		return nil, errors.Wrap(err, "get bridge failed")
+	}
 	return check.Checks{
 		check.NewTimeSwitch(
 			pkg.TimeOfDay{
-				Hour: 8,
+				Hour:     8,
+				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour: 24,
+				Hour:     24,
+				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Pflanzen Licht"),
 			check.NewLightIsOff(bridge, "Pflanzen Licht"),
 		),
 		check.NewTimeSwitch(
 			pkg.TimeOfDay{
-				Hour: 9,
+				Hour:     9,
+				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour: 19,
+				Hour:     19,
+				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium Licht"),
 			check.NewLightIsOff(bridge, "Aquarium Licht"),
 		),
 		check.NewTimeSwitch(
 			pkg.TimeOfDay{
-				Hour: 12,
+				Hour:     12,
+				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour: 12,
+				Hour:     12,
+				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium CO2"),
 			check.NewLightIsOff(bridge, "Aquarium CO2"),
 		),
-	}
+	}, nil
 }
