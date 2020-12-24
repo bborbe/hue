@@ -107,11 +107,11 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		),
 		check.NewTimeSwitch(
 			pkg.TimeOfDay{
-				Hour:     12,
+				Hour:     8,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     12,
+				Hour:     18,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium CO2"),
