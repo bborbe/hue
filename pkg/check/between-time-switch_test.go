@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Time Switch", func() {
+var _ = Describe("Between Time Switch", func() {
 	var main *mocks.Check
 	var fallback *mocks.Check
 	var ctx context.Context
@@ -22,7 +22,7 @@ var _ = Describe("Time Switch", func() {
 	})
 	Context("Between before and until", func() {
 		BeforeEach(func() {
-			check := check.SelectCheck(
+			check := check.NewBetweenTimeSwitch(
 				time.Date(2015, 11, 24, 14, 15, 59, 0, time.Local),
 				pkg.TimeOfDay{
 					Hour:     8,
@@ -57,7 +57,7 @@ var _ = Describe("Time Switch", func() {
 	})
 	Context("Before from", func() {
 		BeforeEach(func() {
-			check := check.SelectCheck(
+			check := check.NewBetweenTimeSwitch(
 				time.Date(2015, 11, 24, 7, 15, 59, 0, time.Local),
 				pkg.TimeOfDay{
 					Hour:     8,
@@ -92,7 +92,7 @@ var _ = Describe("Time Switch", func() {
 	})
 	Context("After from", func() {
 		BeforeEach(func() {
-			check := check.SelectCheck(
+			check := check.NewBetweenTimeSwitch(
 				time.Date(2015, 11, 24, 17, 15, 59, 0, time.Local),
 				pkg.TimeOfDay{
 					Hour:     8,
