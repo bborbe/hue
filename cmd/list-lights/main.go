@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"os"
+	"sort"
 
 	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
@@ -24,10 +25,14 @@ func (a *application) Run(ctx context.Context) error {
 		return errors.Wrap(err, "get bridge failed")
 	}
 
-	lights, err := bridge.GetLightsContext(ctx)
+	hueLights, err := bridge.GetLightsContext(ctx)
 	if err != nil {
 		return errors.Wrap(err, "get lights failed")
 	}
+
+	lights := pkg.Lights(hueLights)
+	sort.Sort(lights)
+
 	glog.Infof("found %d lights", len(lights))
 	for _, light := range lights {
 		glog.Infof("'%s' on: %v", light.Name, light.IsOn())
