@@ -125,4 +125,39 @@ var _ = Describe("Between Time Switch", func() {
 			Expect(fallback.SatisfiedCallCount()).To(Equal(1))
 		})
 	})
+	Context("From > Until", func() {
+		BeforeEach(func() {
+			check := check.NewBetweenTimeSwitch(
+				time.Date(2015, 11, 24, 17, 15, 59, 0, time.Local),
+				pkg.TimeOfDay{
+					Hour:     8,
+					Minute:   0,
+					Second:   0,
+					Location: time.UTC,
+				},
+				pkg.TimeOfDay{
+					Hour:     0,
+					Minute:   0,
+					Second:   0,
+					Location: time.UTC,
+				},
+				main,
+				fallback,
+			)
+			_, _ = check.Satisfied(ctx)
+			_ = check.Apply(ctx)
+		})
+		It("calls main apply", func() {
+			Expect(main.ApplyCallCount()).To(Equal(1))
+		})
+		It("calls not fallback apply", func() {
+			Expect(fallback.ApplyCallCount()).To(Equal(0))
+		})
+		It("calls main apply", func() {
+			Expect(main.SatisfiedCallCount()).To(Equal(1))
+		})
+		It("calls not fallback apply", func() {
+			Expect(fallback.SatisfiedCallCount()).To(Equal(0))
+		})
+	})
 })
