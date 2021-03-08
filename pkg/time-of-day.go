@@ -27,7 +27,7 @@ func (t TimeOfDay) String() string {
 }
 
 func (t TimeOfDay) Duration(now time.Time) time.Duration {
-	nextTick := time.Date(now.Year(), now.Month(), now.Day(), t.Hour, t.Minute, t.Second, 0, t.Location)
+	nextTick := time.Date(now.Year(), now.Month(), now.Day(), t.Hour%24, t.Minute%60, t.Second%60, 0, t.Location)
 	if !nextTick.After(now) {
 		nextTick = nextTick.Add(24 * time.Hour)
 	}

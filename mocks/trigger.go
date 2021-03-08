@@ -32,15 +32,16 @@ func (fake *Trigger) Trigger(arg1 context.Context, arg2 chan<- struct{}) error {
 		arg1 context.Context
 		arg2 chan<- struct{}
 	}{arg1, arg2})
+	stub := fake.TriggerStub
+	fakeReturns := fake.triggerReturns
 	fake.recordInvocation("Trigger", []interface{}{arg1, arg2})
 	fake.triggerMutex.Unlock()
-	if fake.TriggerStub != nil {
-		return fake.TriggerStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.triggerReturns
 	return fakeReturns.result1
 }
 
