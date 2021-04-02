@@ -124,7 +124,7 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     8,
+				Hour:     7,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
