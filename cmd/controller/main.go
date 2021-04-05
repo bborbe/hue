@@ -134,10 +134,10 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 			check.NewLightIsOn(bridge, "Aquarium CO2"),
 			check.NewLightIsOff(bridge, "Aquarium CO2"),
 		),
-		check.NewBetweenMinuteSwitch(
+		check.NewAlternateSwitch(
 			now,
-			15,
-			20,
+			10*time.Minute,
+			5*time.Minute,
 			check.NewLightIsOn(bridge, "Aquarium Skimmer"),
 			check.NewLightIsOff(bridge, "Aquarium Skimmer"),
 		),
