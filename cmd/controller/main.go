@@ -128,7 +128,7 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     18,
+				Hour:     19,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium CO2"),
