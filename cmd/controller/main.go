@@ -154,18 +154,5 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 			check.NewLightIsOn(bridge, "Garnelen Licht"),
 			check.NewLightIsOff(bridge, "Garnelen Licht"),
 		),
-		check.NewBetweenTimeSwitch(
-			now,
-			pkg.TimeOfDay{
-				Hour:     8,
-				Location: loc,
-			},
-			pkg.TimeOfDay{
-				Hour:     24,
-				Location: loc,
-			},
-			check.NewLightIsOn(bridge, "Monitor Licht 1"),
-			check.NewLightIsOff(bridge, "Monitor Licht 1"),
-		),
 	}, nil
 }
