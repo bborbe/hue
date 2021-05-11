@@ -85,11 +85,11 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     8,
+				Hour:     9,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     22,
+				Hour:     19,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Pflanzen Licht"),
