@@ -80,16 +80,22 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "get bridge failed")
 	}
+
 	now := time.Now()
+	aquariumLightOnHour := 10
+	aquariumLightOffhour := aquariumLightOnHour + 10
+	co2OnHour := aquariumLightOnHour - 2
+	co2OffHour := aquariumLightOffhour
+
 	return check.Checks{
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     9,
+				Hour:     aquariumLightOnHour,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     19,
+				Hour:     aquariumLightOffhour,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Pflanzen Licht"),
@@ -98,11 +104,11 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     9,
+				Hour:     aquariumLightOnHour,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     19,
+				Hour:     aquariumLightOffhour,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium Licht"),
@@ -111,11 +117,11 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     9,
+				Hour:     aquariumLightOnHour,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     19,
+				Hour:     aquariumLightOffhour,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium Rack"),
@@ -124,15 +130,28 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     7,
+				Hour:     co2OnHour,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     19,
+				Hour:     co2OffHour,
 				Location: loc,
 			},
 			check.NewLightIsOn(bridge, "Aquarium CO2"),
 			check.NewLightIsOff(bridge, "Aquarium CO2"),
+		),
+		check.NewBetweenTimeSwitch(
+			now,
+			pkg.TimeOfDay{
+				Hour:     aquariumLightOnHour,
+				Location: loc,
+			},
+			pkg.TimeOfDay{
+				Hour:     aquariumLightOffhour,
+				Location: loc,
+			},
+			check.NewLightIsOn(bridge, "Garnelen Licht"),
+			check.NewLightIsOff(bridge, "Garnelen Licht"),
 		),
 		check.NewAlternateSwitch(
 			now,
@@ -140,19 +159,6 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 			5*time.Minute,
 			check.NewLightIsOn(bridge, "Aquarium Skimmer"),
 			check.NewLightIsOff(bridge, "Aquarium Skimmer"),
-		),
-		check.NewBetweenTimeSwitch(
-			now,
-			pkg.TimeOfDay{
-				Hour:     9,
-				Location: loc,
-			},
-			pkg.TimeOfDay{
-				Hour:     19,
-				Location: loc,
-			},
-			check.NewLightIsOn(bridge, "Garnelen Licht"),
-			check.NewLightIsOff(bridge, "Garnelen Licht"),
 		),
 	}, nil
 }
