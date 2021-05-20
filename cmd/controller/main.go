@@ -84,7 +84,7 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 	now := time.Now()
 	aquariumLightOnHour := 10
 	aquariumLightOffhour := aquariumLightOnHour + 10
-	co2OnHour := aquariumLightOnHour - 2
+	co2OnHour := aquariumLightOnHour - 3
 	co2OffHour := aquariumLightOffhour
 
 	return check.Checks{
