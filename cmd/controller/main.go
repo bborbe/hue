@@ -150,8 +150,21 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 				Hour:     aquariumLightOffhour,
 				Location: loc,
 			},
-			check.NewLightIsOn(bridge, "Garnelen Licht"),
-			check.NewLightIsOff(bridge, "Garnelen Licht"),
+			check.NewLightIsOn(bridge, "Garnelen Licht 1"),
+			check.NewLightIsOff(bridge, "Garnelen Licht 1"),
+		),
+		check.NewBetweenTimeSwitch(
+			now,
+			pkg.TimeOfDay{
+				Hour:     aquariumLightOnHour,
+				Location: loc,
+			},
+			pkg.TimeOfDay{
+				Hour:     aquariumLightOffhour,
+				Location: loc,
+			},
+			check.NewLightIsOn(bridge, "Garnelen Licht 2"),
+			check.NewLightIsOff(bridge, "Garnelen Licht 2"),
 		),
 		check.NewAlternateSwitch(
 			now,
