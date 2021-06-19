@@ -29,7 +29,6 @@ func (a *application) Run(ctx context.Context) error {
 		default:
 			if err := a.runChecks(ctx); err != nil {
 				glog.Warningf("run checks failed: %v", err)
-				continue
 			} else {
 				glog.V(2).Infof("all checks applied")
 			}
