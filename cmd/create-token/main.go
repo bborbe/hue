@@ -6,8 +6,9 @@ import (
 	"os"
 
 	"github.com/amimof/huego"
-	"github.com/bborbe/hue/pkg"
 	"github.com/pkg/errors"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 type application struct {

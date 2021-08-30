@@ -1,10 +1,15 @@
+// Copyright (c) 2021 Benjamin Borbe All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package check
 
 import (
 	"time"
 
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 // NewBetweenTimeSwitch turns on main between the given hours and fallback if not

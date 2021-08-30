@@ -5,9 +5,10 @@ import (
 	"os"
 	"sort"
 
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
 	"github.com/pkg/errors"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 type application struct {

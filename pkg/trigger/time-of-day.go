@@ -1,11 +1,16 @@
+// Copyright (c) 2021 Benjamin Borbe All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package trigger
 
 import (
 	"context"
 	"time"
 
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 func NewTimeOfDay(timeOfDay pkg.TimeOfDay) Trigger {

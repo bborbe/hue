@@ -5,10 +5,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/bborbe/hue/pkg"
-	"github.com/bborbe/hue/pkg/check"
 	"github.com/golang/glog"
 	"github.com/pkg/errors"
+
+	"github.com/bborbe/hue/pkg"
+	"github.com/bborbe/hue/pkg/check"
 )
 
 type application struct {
