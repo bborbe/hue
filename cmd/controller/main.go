@@ -167,8 +167,8 @@ func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
 		),
 		check.NewAlternateSwitch(
 			now,
-			10*time.Minute,
 			5*time.Minute,
+			25*time.Minute,
 			check.NewLightIsOn(bridge, "Aquarium Skimmer"),
 			check.NewLightIsOff(bridge, "Aquarium Skimmer"),
 		),
