@@ -21,7 +21,10 @@ func main() {
 }
 
 func (a *application) Run(ctx context.Context) error {
-	bridge, err := pkg.GetBridge(ctx, pkg.Token(a.Token))
+	bridgeProvider := pkg.NewBridgeProviderCache(
+		pkg.NewBridgeProvider(pkg.Token(a.Token)),
+	)
+	bridge, err := bridgeProvider.GetBridge(ctx)
 	if err != nil {
 		return errors.Wrap(err, "get bridge failed")
 	}

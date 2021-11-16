@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/amimof/huego"
 	"github.com/golang/glog"
 	"github.com/pkg/errors"
 
@@ -23,12 +24,18 @@ func main() {
 }
 
 func (a *application) Run(ctx context.Context) error {
+	bridgeProvider := pkg.NewBridgeProviderFallback(
+		pkg.NewBridgeProviderCache(
+			pkg.NewBridgeProvider(pkg.Token(a.Token)),
+		),
+		huego.New("192.168.178.119", a.Token),
+	)
 	for {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
 		default:
-			if err := a.runChecks(ctx); err != nil {
+			if err := a.runChecks(ctx, bridgeProvider); err != nil {
 				glog.Warningf("run checks failed: %v", err)
 			} else {
 				glog.V(2).Infof("all checks applied")
@@ -43,8 +50,8 @@ func (a *application) Run(ctx context.Context) error {
 	}
 }
 
-func (a *application) runChecks(ctx context.Context) error {
-	checks, err := a.buildChecks(ctx)
+func (a *application) runChecks(ctx context.Context, provider pkg.ProvidesBridge) error {
+	checks, err := a.buildChecks(ctx, provider)
 	if err != nil {
 		return errors.Wrap(err, "builds checks failed")
 	}
@@ -71,12 +78,12 @@ func (a *application) runChecks(ctx context.Context) error {
 	return nil
 }
 
-func (a *application) buildChecks(ctx context.Context) (check.Checks, error) {
+func (a *application) buildChecks(ctx context.Context, provider pkg.ProvidesBridge) (check.Checks, error) {
 	loc, err := time.LoadLocation("Europe/Berlin")
 	if err != nil {
 		return nil, errors.Wrap(err, "load location failed")
 	}
-	bridge, err := pkg.GetBridge(ctx, pkg.Token(a.Token))
+	bridge, err := provider.GetBridge(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "get bridge failed")
 	}

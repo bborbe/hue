@@ -6,6 +6,7 @@ package pkg
 
 import (
 	"context"
+	"sync"
 
 	"github.com/amimof/huego"
 	"github.com/golang/glog"
@@ -20,17 +21,59 @@ func (t Token) String() string {
 	return string(t)
 }
 
-// GetBridge returns a bridge if found
-func GetBridge(ctx context.Context, token Token) (*huego.Bridge, error) {
-	discover, err := huego.DiscoverContext(ctx)
-	if err != nil {
-		return nil, errors.Wrap(err, "discover failed")
-	}
-	glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
-	bridge := &huego.Bridge{
-		Host: discover.Host,
-		ID:   discover.ID,
-		User: token.String(),
-	}
-	return bridge, nil
+type ProvidesBridge interface {
+	// GetBridge returns a bridge if found
+	GetBridge(ctx context.Context) (*huego.Bridge, error)
+}
+
+type ProvidesBridgeFunc func(ctx context.Context) (*huego.Bridge, error)
+
+func (p ProvidesBridgeFunc) GetBridge(ctx context.Context) (*huego.Bridge, error) {
+	return p(ctx)
+}
+
+func NewBridgeProvider(token Token) ProvidesBridge {
+	return ProvidesBridgeFunc(func(ctx context.Context) (*huego.Bridge, error) {
+		discover, err := huego.DiscoverContext(ctx)
+		if err != nil {
+			return nil, errors.Wrap(err, "discover failed")
+		}
+		glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
+		bridge := &huego.Bridge{
+			Host: discover.Host,
+			ID:   discover.ID,
+			User: token.String(),
+		}
+		return bridge, nil
+	})
+}
+
+func NewBridgeProviderCache(providesBridge ProvidesBridge) ProvidesBridge {
+	var bridge *huego.Bridge
+	var mux sync.Mutex
+	return ProvidesBridgeFunc(func(ctx context.Context) (*huego.Bridge, error) {
+		mux.Lock()
+		defer mux.Unlock()
+		var err error
+		if bridge != nil {
+			if _, err = bridge.GetConfig(); err == nil {
+				return bridge, nil
+			}
+		}
+		bridge, err = providesBridge.GetBridge(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return bridge, nil
+	})
+}
+
+func NewBridgeProviderFallback(providesBridge ProvidesBridge, fallback *huego.Bridge) ProvidesBridge {
+	return ProvidesBridgeFunc(func(ctx context.Context) (*huego.Bridge, error) {
+		bridge, err := providesBridge.GetBridge(ctx)
+		if err != nil {
+			return fallback, nil
+		}
+		return bridge, nil
+	})
 }
