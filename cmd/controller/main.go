@@ -91,8 +91,8 @@ func (a *application) buildChecks(ctx context.Context, provider pkg.ProvidesBrid
 	now := time.Now()
 	aquariumLightOnHour := 10
 	aquariumLightOffhour := aquariumLightOnHour + 10
-	co2OnHour := aquariumLightOnHour - 3
-	co2OffHour := aquariumLightOffhour
+	co2OnHour := aquariumLightOnHour - 2
+	co2OffHour := aquariumLightOffhour - 2
 
 	return check.Checks{
 		check.NewBetweenTimeSwitch(
