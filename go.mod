@@ -3,11 +3,12 @@ module github.com/bborbe/hue
 go 1.17
 
 require (
-	github.com/amimof/huego v1.2.0
+	github.com/amimof/huego v1.2.1
 	github.com/bborbe/argument v1.0.1
 	github.com/golang/glog v1.0.0
 	github.com/google/addlicense v1.0.0
 	github.com/incu6us/goimports-reviser v0.1.6
+	github.com/kelvins/sunrisesunset v0.0.0-20210220141756-39fa1bd816d5
 	github.com/kisielk/errcheck v1.6.0
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.4.1
 	github.com/onsi/ginkgo v1.16.4

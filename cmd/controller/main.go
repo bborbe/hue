@@ -7,6 +7,7 @@ import (
 
 	"github.com/amimof/huego"
 	"github.com/golang/glog"
+	"github.com/kelvins/sunrisesunset"
 	"github.com/pkg/errors"
 
 	"github.com/bborbe/hue/pkg"
@@ -93,6 +94,18 @@ func (a *application) buildChecks(ctx context.Context, provider pkg.ProvidesBrid
 	aquariumLightOffhour := aquariumLightOnHour + 10
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
+
+	p := sunrisesunset.Parameters{
+		Latitude:  50.1,
+		Longitude: 8.1,
+		UtcOffset: 0,
+		Date:      now.UTC(),
+	}
+	sunrise, sunset, err := p.GetSunriseSunset()
+	if err != nil {
+		return nil, errors.Wrap(err, "get sunrise and sunset failed")
+	}
+	glog.V(2).Infof("now %s sunrise %s sunset %s", now.In(loc).Format("15:04:05"), sunrise.In(loc).Format("15:04:05"), sunset.In(loc).Format("15:04:05"))
 
 	return check.Checks{
 		check.NewBetweenTimeSwitch(
