@@ -94,6 +94,8 @@ func (a *application) buildChecks(ctx context.Context, provider pkg.ProvidesBrid
 	aquariumLightOffhour := aquariumLightOnHour + 10
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
+	artemiaLightOnHour := 8
+	artemiaLightOffhour := 24
 
 	p := sunrisesunset.Parameters{
 		Latitude:  50.1,
@@ -108,19 +110,19 @@ func (a *application) buildChecks(ctx context.Context, provider pkg.ProvidesBrid
 	glog.V(2).Infof("now %s sunrise %s sunset %s", now.In(loc).Format("15:04:05"), sunrise.In(loc).Format("15:04:05"), sunset.In(loc).Format("15:04:05"))
 
 	return check.Checks{
-		// check.NewBetweenTimeSwitch(
-		// 	now,
-		// 	pkg.TimeOfDay{
-		// 		Hour:     aquariumLightOnHour,
-		// 		Location: loc,
-		// 	},
-		// 	pkg.TimeOfDay{
-		// 		Hour:     aquariumLightOffhour,
-		// 		Location: loc,
-		// 	},
-		// 	check.NewLightIsOn(bridge, "Pflanzen Licht"),
-		// 	check.NewLightIsOff(bridge, "Pflanzen Licht"),
-		// ),
+		check.NewBetweenTimeSwitch(
+			now,
+			pkg.TimeOfDay{
+				Hour:     artemiaLightOnHour,
+				Location: loc,
+			},
+			pkg.TimeOfDay{
+				Hour:     artemiaLightOffhour,
+				Location: loc,
+			},
+			check.NewLightIsOn(bridge, "Artemia Licht"),
+			check.NewLightIsOff(bridge, "Artemia Licht"),
+		),
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
