@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/amimof/huego"
+	"github.com/bborbe/errors"
 	"github.com/golang/glog"
-	"github.com/pkg/errors"
 )
 
 // Token to conenct to Hue bridge
@@ -36,7 +36,7 @@ func NewBridgeProvider(token Token) ProvidesBridge {
 	return ProvidesBridgeFunc(func(ctx context.Context) (*huego.Bridge, error) {
 		discover, err := huego.DiscoverContext(ctx)
 		if err != nil {
-			return nil, errors.Wrap(err, "discover failed")
+			return nil, errors.Wrap(ctx, err, "discover failed")
 		}
 		glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
 		bridge := &huego.Bridge{

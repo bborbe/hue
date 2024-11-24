@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/amimof/huego"
-	"github.com/pkg/errors"
+	"github.com/bborbe/errors"
 )
 
 type LightName string
@@ -22,14 +22,14 @@ func (l LightName) String() string {
 func LightByName(ctx context.Context, bridge *huego.Bridge, name LightName) (*huego.Light, error) {
 	lights, err := bridge.GetLightsContext(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "get lights failed")
+		return nil, errors.Wrap(ctx, err, "get lights failed")
 	}
 	for _, light := range lights {
 		if light.Name == name.String() {
 			return &light, nil
 		}
 	}
-	return nil, errors.Errorf("no light with name '%s' found", name)
+	return nil, errors.Errorf(ctx, "no light with name '%s' found", name)
 }
 
 type Lights []huego.Light

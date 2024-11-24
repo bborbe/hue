@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/amimof/huego"
-	"github.com/pkg/errors"
+	"github.com/bborbe/errors"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -23,7 +23,7 @@ func main() {
 func (a *application) Run(ctx context.Context) error {
 	discover, err := huego.DiscoverContext(ctx)
 	if err != nil {
-		return errors.Wrap(err, "discover failed")
+		return errors.Wrap(ctx, err, "discover failed")
 	}
 	token, err := discover.CreateUserContext(ctx, a.Name)
 	if err != nil {

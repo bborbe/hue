@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
+	"github.com/bborbe/errors"
 	"github.com/golang/glog"
-	"github.com/pkg/errors"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -26,7 +26,7 @@ func (a *application) Run(ctx context.Context) error {
 	)
 	bridge, err := bridgeProvider.GetBridge(ctx)
 	if err != nil {
-		return errors.Wrap(err, "get bridge failed")
+		return errors.Wrap(ctx, err, "get bridge failed")
 	}
 
 	light, err := pkg.LightByName(ctx, bridge, pkg.LightName(a.Light))
@@ -38,7 +38,7 @@ func (a *application) Run(ctx context.Context) error {
 		return nil
 	}
 	if err := light.OnContext(ctx); err != nil {
-		return errors.Wrap(err, "turn on light failed")
+		return errors.Wrap(ctx, err, "turn on light failed")
 	}
 	glog.Infof("light turned on")
 	return nil

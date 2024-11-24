@@ -5,8 +5,8 @@ import (
 	"os"
 	"sort"
 
+	"github.com/bborbe/errors"
 	"github.com/golang/glog"
-	"github.com/pkg/errors"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -26,12 +26,12 @@ func (a *application) Run(ctx context.Context) error {
 	)
 	bridge, err := bridgeProvider.GetBridge(ctx)
 	if err != nil {
-		return errors.Wrap(err, "get bridge failed")
+		return errors.Wrap(ctx, err, "get bridge failed")
 	}
 
 	hueLights, err := bridge.GetLightsContext(ctx)
 	if err != nil {
-		return errors.Wrap(err, "get lights failed")
+		return errors.Wrap(ctx, err, "get lights failed")
 	}
 
 	lights := pkg.Lights(hueLights)

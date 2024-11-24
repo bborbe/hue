@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/bborbe/errors"
 )
 
 type TimeOfDay struct {
@@ -21,7 +21,7 @@ type TimeOfDay struct {
 
 func (t TimeOfDay) Validate(ctx context.Context) error {
 	if t.Location == nil {
-		return errors.New("location missing")
+		return errors.New(ctx, "location missing")
 	}
 	return nil
 }
