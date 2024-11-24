@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hue
+  namespace: '{{ "NAMESPACE" | env }}'
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+    keel.sh/match-tag: "true"
+    keel.sh/pollSchedule: "@every 1m"
+    random: '{{ "RANDOM" | env }}'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hue
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9090"
+        prometheus.io/scheme: http
+        prometheus.io/scrape: "true"
+        random: '{{ "RANDOM" | env }}'
+      labels:
+        app: hue
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - hue
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: service
+          args:
+            - -v={{"LOGLEVEL" | env}}
+          env:
+            - name: LISTEN
+              value: ':9090'
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  key: sentry-dsn
+                  name: hue
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: token
+                  name: hue
+          image: 'docker.io/bborbe/hue:{{"BRANCH" | env}}'
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: 9090
+              scheme: HTTP
+            initialDelaySeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 9090
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 9090
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+            requests:
+              cpu: 20m
+              memory: 200Mi

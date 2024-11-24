@@ -4,5 +4,6 @@ Check if desired state and corrects it if necessary.
 
 ```bash
 go run main.go \
--token=XXXX
+-token=XXXX \
+-v=2
 ```
