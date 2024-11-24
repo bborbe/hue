@@ -1,7 +1,3 @@
-// Copyright (c) 2021 Benjamin Borbe All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 //go:build tools
 // +build tools
 
@@ -13,4 +9,6 @@ import (
 	_ "github.com/kisielk/errcheck"
 	_ "github.com/maxbrunsfeld/counterfeiter/v6"
 	_ "golang.org/x/lint/golint"
+	_ "golang.org/x/vuln/cmd/govulncheck"
+	_ "k8s.io/code-generator"
 )

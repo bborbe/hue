@@ -8,7 +8,7 @@ import "context"
 
 type Checks []Check
 
-//go:generate counterfeiter -o ../../mocks/check.go --fake-name Check . Check
+//counterfeiter:generate -o ../../mocks/check.go --fake-name Check . Check
 
 // Check is something is in the right state
 type Check interface {
