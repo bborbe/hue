@@ -28,15 +28,14 @@ spec:
         app: hue
     spec:
       affinity:
-        podAntiAffinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node_type
                     operator: In
                     values:
-                      - hue
-              topologyKey: kubernetes.io/hostname
+                      - 'agent'
       containers:
         - name: service
           args:
