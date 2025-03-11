@@ -49,7 +49,7 @@ func (a *application) createController() run.Func {
 			pkg.NewBridgeProviderCache(
 				pkg.NewBridgeProvider(pkg.Token(a.Token)),
 			),
-			huego.New("192.168.178.119", a.Token),
+			huego.New("192.168.178.100", a.Token),
 		)
 		for {
 			select {

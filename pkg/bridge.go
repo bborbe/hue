@@ -34,17 +34,24 @@ func (p ProvidesBridgeFunc) GetBridge(ctx context.Context) (*huego.Bridge, error
 
 func NewBridgeProvider(token Token) ProvidesBridge {
 	return ProvidesBridgeFunc(func(ctx context.Context) (*huego.Bridge, error) {
-		discover, err := huego.DiscoverContext(ctx)
+		list, err := huego.DiscoverAllContext(ctx)
 		if err != nil {
 			return nil, errors.Wrap(ctx, err, "discover failed")
 		}
-		glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
-		bridge := &huego.Bridge{
-			Host: discover.Host,
-			ID:   discover.ID,
-			User: token.String(),
+		glog.V(2).Infof("list %+v", list)
+
+		for _, discover := range list {
+			if discover.ID != "ecb5fafffe1a4d5d" {
+				continue
+			}
+			glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
+			return &huego.Bridge{
+				Host: discover.Host,
+				ID:   discover.ID,
+				User: token.String(),
+			}, nil
 		}
-		return bridge, nil
+		return nil, errors.New(ctx, "not found")
 	})
 }
 
