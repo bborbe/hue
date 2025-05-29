@@ -3,6 +3,7 @@ module github.com/bborbe/hue
 go 1.24.3
 
 require (
+	github.com/actgardner/gogen-avro/v9 v9.2.0
 	github.com/amimof/huego v1.2.1
 	github.com/bborbe/argument v1.3.2
 	github.com/bborbe/errors v1.3.0
@@ -14,7 +15,7 @@ require (
 	github.com/golang/glog v1.2.5
 	github.com/google/addlicense v1.1.1
 	github.com/gorilla/mux v1.8.1
-	github.com/incu6us/goimports-reviser v0.1.6
+	github.com/incu6us/goimports-reviser/v3 v3.9.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
 	github.com/kisielk/errcheck v1.9.0
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.11.2
@@ -27,7 +28,6 @@ require (
 )
 
 require (
-	github.com/actgardner/gogen-avro/v9 v9.2.0 // indirect
 	github.com/bborbe/argument/v2 v2.3.0 // indirect
 	github.com/bborbe/collection v1.9.0 // indirect
 	github.com/bborbe/kv v1.14.0 // indirect
@@ -50,7 +50,7 @@ require (
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20250501235452-c0086092b71a // indirect
-	github.com/incu6us/goimports-reviser/v3 v3.9.1 // indirect
+	github.com/incu6us/goimports-reviser v0.1.6 // indirect
 	github.com/jarcoal/httpmock v1.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
