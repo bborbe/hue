@@ -43,7 +43,7 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
 	artemiaLightOnHour := 8
-	artemiaLightOffhour := 24
+	artemiaLightOffhour := 23
 
 	p := sunrisesunset.Parameters{
 		Latitude:  50.1,
