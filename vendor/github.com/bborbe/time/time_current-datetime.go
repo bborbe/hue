@@ -12,6 +12,12 @@ type CurrentDateTimeGetter interface {
 	Now() DateTime
 }
 
+type CurrentDateTimeGetterFunc func() DateTime
+
+func (c CurrentDateTimeGetterFunc) Now() DateTime {
+	return c()
+}
+
 type CurrentDateTimeSetter interface {
 	SetNow(now DateTime)
 }

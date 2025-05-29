@@ -13,6 +13,29 @@ import (
 
 // Parse combines all functionality. It parse env args, fills it the struct, print all arguments and validate required fields are set.
 func Parse(ctx context.Context, data interface{}) error {
+	if err := parse(ctx, data); err != nil {
+		return errors.Wrapf(ctx, err, "parse failed")
+	}
+	if err := ValidateRequired(ctx, data); err != nil {
+		return errors.Wrapf(ctx, err, "validate required failed")
+	}
+	return nil
+}
+
+func ParseAndPrint(ctx context.Context, data interface{}) error {
+	if err := parse(ctx, data); err != nil {
+		return errors.Wrapf(ctx, err, "parse failed")
+	}
+	if err := Print(ctx, data); err != nil {
+		return errors.Wrapf(ctx, err, "print failed")
+	}
+	if err := ValidateRequired(ctx, data); err != nil {
+		return errors.Wrapf(ctx, err, "validate required failed")
+	}
+	return nil
+}
+
+func parse(ctx context.Context, data interface{}) error {
 	argsValues, err := argsToValues(ctx, data, os.Args[1:])
 	if err != nil {
 		return errors.Wrapf(ctx, err, "arg to values failed")
@@ -27,12 +50,6 @@ func Parse(ctx context.Context, data interface{}) error {
 	}
 	if err := Fill(ctx, data, mergeValues(defaultValues, argsValues, envValues)); err != nil {
 		return errors.Wrapf(ctx, err, "fill failed")
-	}
-	if err := Print(ctx, data); err != nil {
-		return errors.Wrapf(ctx, err, "print failed")
-	}
-	if err := ValidateRequired(ctx, data); err != nil {
-		return errors.Wrapf(ctx, err, "validate required failed")
 	}
 	return nil
 }

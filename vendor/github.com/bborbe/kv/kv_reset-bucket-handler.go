@@ -8,21 +8,32 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"sync"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 )
 
 // NewResetBucketHandler returns a http.Handler
 // that allow delete a bucket
 func NewResetBucketHandler(db DB, cancel context.CancelFunc) http.Handler {
+	var lock sync.Mutex
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		ctx := context.Background()
 		vars := mux.Vars(req)
 		bucketName := BucketName(vars["BucketName"])
+		ctx := context.Background()
 		if len(bucketName) == 0 {
 			http.Error(resp, "parameter bucket missing", http.StatusBadRequest)
 			return
 		}
+		if lock.TryLock() == false {
+			glog.V(2).Infof("reset bucket %s running", bucketName)
+			http.Error(resp, fmt.Sprintf("reset bucket %s already running", bucketName), http.StatusInternalServerError)
+			return
+		}
+		defer lock.Unlock()
+		glog.V(2).Infof("reset bucket %s started", bucketName)
+
 		err := db.Update(ctx, func(ctx context.Context, tx Tx) error {
 			return tx.DeleteBucket(ctx, bucketName)
 		})
@@ -31,7 +42,8 @@ func NewResetBucketHandler(db DB, cancel context.CancelFunc) http.Handler {
 			return
 		}
 		resp.WriteHeader(http.StatusOK)
-		fmt.Fprint(resp, "reset bucket successful")
+		_, _ = fmt.Fprintf(resp, "reset bucket %s successful\n", bucketName)
+		glog.V(2).Infof("reset bucket %s successful", bucketName)
 		cancel()
 	})
 }

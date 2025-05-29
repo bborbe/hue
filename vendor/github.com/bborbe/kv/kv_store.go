@@ -43,10 +43,19 @@ type Store[KEY ~[]byte | ~string, OBJECT any] interface {
 	StoreStream[KEY, OBJECT]
 }
 
+// NewStore returns a Store
 func NewStore[KEY ~[]byte | ~string, OBJECT any](db DB, bucketName BucketName) Store[KEY, OBJECT] {
+	return NewStoreFromTx(
+		db,
+		NewStoreTx[KEY, OBJECT](bucketName),
+	)
+}
+
+// NewStoreFromTx returns a Store from a existing StoreTx
+func NewStoreFromTx[KEY ~[]byte | ~string, OBJECT any](db DB, storeTx StoreTx[KEY, OBJECT]) Store[KEY, OBJECT] {
 	return &store[KEY, OBJECT]{
 		db:    db,
-		store: NewStoreTx[KEY, OBJECT](bucketName),
+		store: storeTx,
 	}
 }
 

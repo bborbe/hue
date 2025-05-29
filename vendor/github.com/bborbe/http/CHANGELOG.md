@@ -8,6 +8,42 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## v1.12.0
+
+- add GarbageCollectorHandler
+
+## v1.11.1
+
+- add RoundTripperFunc
+
+## v1.11.0
+
+- add http.Handler mock
+- add Handler and HandlerFunc
+
+## v1.10.3
+
+- RoundTripperRetry retry http request on io.EOF error
+
+## v1.10.2
+
+- improve WithRedirects
+
+## v1.10.1
+
+- add WithRetry and WithoutRetry to HttpClientBuilder
+- go mod update
+
+## v1.10.0
+
+- remove vendor
+- go mod update
+
+## v1.9.0
+
+- allow define error code error use by ErrorHandler
+- go mod update
+
 ## v1.8.1
 
 - allow define skip statusCodes in RetryRoundTripper

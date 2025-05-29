@@ -7,6 +7,7 @@ package http
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 	"syscall"
 
@@ -18,6 +19,9 @@ type HasTimeoutError interface {
 }
 
 func IsRetryError(err error) bool {
+	if errors.Is(err, io.EOF) {
+		return true
+	}
 	if errors.Is(err, syscall.ECONNREFUSED) {
 		return true
 	}

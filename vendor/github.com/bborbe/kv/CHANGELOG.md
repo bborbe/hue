@@ -8,6 +8,26 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## v1.14.0
+
+- add RunnableTx and FuncTx
+
+## v1.13.2
+
+- add lock to reset handlers and improve logging
+- go mod update
+
+## v1.13.1
+
+- add NewStoreFromTx
+- go mod update
+
+## v1.13.0
+
+- add DBWithMetrics
+- remove vendor files
+- go mod update
+
 ## v1.12.2
 
 - go mod update

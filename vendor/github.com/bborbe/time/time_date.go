@@ -116,11 +116,14 @@ func (d Date) MarshalJSON() ([]byte, error) {
 	return json.Marshal(time.Format(stdtime.DateOnly))
 }
 
-func (d *Date) Time() stdtime.Time {
-	return stdtime.Time(*d)
+func (d Date) Time() stdtime.Time {
+	return stdtime.Time(d)
 }
 
 func (d *Date) TimePtr() *stdtime.Time {
+	if d == nil {
+		return nil
+	}
 	t := stdtime.Time(*d)
 	return &t
 }
@@ -150,12 +153,12 @@ func (d *Date) ComparePtr(stdTime *Date) int {
 	return d.Compare(*stdTime)
 }
 
-func (d Date) Add(duration stdtime.Duration) Date {
-	return Date(d.Time().Add(duration))
+func (d Date) Add(duration HasDuration) Date {
+	return Date(d.Time().Add(duration.Duration()))
 }
 
-func (d Date) Sub(duration DateTime) Duration {
-	return Duration(d.Time().Sub(duration.Time()))
+func (d Date) Sub(time HasTime) Duration {
+	return Duration(d.Time().Sub(time.Time()))
 }
 
 func (d Date) UnixMicro() int64 {
@@ -164,4 +167,16 @@ func (d Date) UnixMicro() int64 {
 
 func (d Date) Unix() int64 {
 	return d.Time().Unix()
+}
+
+func (d Date) AddTime(years int, months int, days int) Date {
+	return Date(d.Time().AddDate(years, months, days))
+}
+
+func (d Date) UTC() Date {
+	return Date(d.Time().UTC())
+}
+
+func (d Date) Weekday() Weekday {
+	return Weekday(d.Time().Weekday())
 }

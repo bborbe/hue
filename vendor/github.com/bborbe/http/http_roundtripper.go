@@ -7,6 +7,4 @@ package http
 import "net/http"
 
 //counterfeiter:generate -o mocks/http-round-tripper.go --fake-name HttpRoundTripper . RoundTripper
-type RoundTripper interface {
-	http.RoundTripper
-}
+type RoundTripper http.RoundTripper

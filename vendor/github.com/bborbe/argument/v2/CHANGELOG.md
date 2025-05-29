@@ -8,6 +8,21 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## v2.3.0
+
+- remove print by default
+- add ParseAndPrint
+- go mod update
+
+## v2.2.0
+
+- remove vendor
+- go mod update
+
+## v2.1.5
+
+- go mod update
+
 ## v2.1.4
 
 - go mod update

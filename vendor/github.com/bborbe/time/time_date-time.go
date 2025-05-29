@@ -158,11 +158,14 @@ func (d DateTime) MarshalJSON() ([]byte, error) {
 	return json.Marshal(time.Format(stdtime.RFC3339Nano))
 }
 
-func (d *DateTime) Time() stdtime.Time {
-	return stdtime.Time(*d)
+func (d DateTime) Time() stdtime.Time {
+	return stdtime.Time(d)
 }
 
 func (d *DateTime) TimePtr() *stdtime.Time {
+	if d == nil {
+		return nil
+	}
 	t := stdtime.Time(*d)
 	return &t
 }
@@ -194,20 +197,20 @@ func (d DateTime) Unix() int64 {
 	return d.Time().Unix()
 }
 
-func (d DateTime) Before(dateTime DateTime) bool {
-	return d.Time().Before(dateTime.Time())
+func (d DateTime) Before(time HasTime) bool {
+	return d.Time().Before(time.Time())
 }
 
-func (d DateTime) After(dateTime DateTime) bool {
-	return d.Time().After(dateTime.Time())
+func (d DateTime) After(time HasTime) bool {
+	return d.Time().After(time.Time())
 }
 
-func (d DateTime) Add(duration Duration) DateTime {
+func (d DateTime) Add(duration HasDuration) DateTime {
 	return DateTime(d.Time().Add(duration.Duration()))
 }
 
-func (d DateTime) Sub(duration DateTime) Duration {
-	return Duration(d.Time().Sub(duration.Time()))
+func (d DateTime) Sub(time HasTime) Duration {
+	return Duration(d.Time().Sub(time.Time()))
 }
 
 func (d DateTime) Compare(stdTime DateTime) int {
@@ -227,6 +230,18 @@ func (d *DateTime) ComparePtr(stdTime *DateTime) int {
 	return d.Compare(*stdTime)
 }
 
-func (d DateTime) Truncate(duration Duration) DateTime {
+func (d DateTime) Truncate(duration HasDuration) DateTime {
 	return DateTime(d.Time().Truncate(duration.Duration()))
+}
+
+func (d DateTime) AddTime(years int, months int, days int) DateTime {
+	return DateTime(d.Time().AddDate(years, months, days))
+}
+
+func (d DateTime) UTC() DateTime {
+	return DateTime(d.Time().UTC())
+}
+
+func (d DateTime) Weekday() Weekday {
+	return Weekday(d.Time().Weekday())
 }

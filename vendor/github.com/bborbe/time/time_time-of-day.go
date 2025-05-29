@@ -53,7 +53,7 @@ func ParseTimeOfDay(ctx context.Context, value interface{}) (*TimeOfDay, error) 
 		return TimeOfDayFromTime(now).Ptr(), nil
 	}
 	if parts := strings.Split(str, " "); len(parts) == 2 {
-		location, err := stdtime.LoadLocation(parts[1])
+		location, err := LoadLocation(ctx, parts[1])
 		if err != nil {
 			return nil, errors.Wrapf(ctx, err, "load location '%s' failed", parts[1])
 		}

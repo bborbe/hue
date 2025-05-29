@@ -8,6 +8,23 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## v1.6.2
+
+- fix MainCmd
+
+## v1.6.1
+
+- MainBasic -> MainCmd
+
+## v1.6.0
+
+- add MainBasic
+
+## v1.5.0
+
+- remove vendor
+- go mod update
+
 ## v1.4.0
 
 - remove set v=2
