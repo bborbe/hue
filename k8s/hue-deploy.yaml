@@ -48,11 +48,21 @@ spec:
                 secretKeyRef:
                   key: sentry-dsn
                   name: hue
+            - name: URL
+              valueFrom:
+                secretKeyRef:
+                  name: hue
+                  key: url
+            - name: ID
+              valueFrom:
+                secretKeyRef:
+                  name: hue
+                  key: id
             - name: TOKEN
               valueFrom:
                 secretKeyRef:
-                  key: token
                   name: hue
+                  key: token
           image: 'docker.io/bborbe/hue:{{"BRANCH" | env}}'
           imagePullPolicy: Always
           livenessProbe:

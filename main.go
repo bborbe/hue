@@ -6,20 +6,22 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"os"
 	"time"
 
+	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
+	"github.com/bborbe/hue/pkg"
+	"github.com/bborbe/hue/pkg/factory"
 	"github.com/bborbe/log"
-	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/bborbe/hue/pkg"
-	"github.com/bborbe/hue/pkg/factory"
+	"github.com/bborbe/run"
 )
 
 func main() {
@@ -28,11 +30,13 @@ func main() {
 }
 
 type application struct {
-	Listen      string        `required:"true" arg:"listen" env:"LISTEN" usage:"address to listen to"`
-	SentryDSN   string        `required:"false" arg:"sentry-dsn" env:"SENTRY_DSN" usage:"SentryDSN" display:"length"`
+	Listen      string        `required:"true"  arg:"listen"       env:"LISTEN"       usage:"address to listen to"`
+	SentryDSN   string        `required:"false" arg:"sentry-dsn"   env:"SENTRY_DSN"   usage:"SentryDSN"            display:"length"`
 	SentryProxy string        `required:"false" arg:"sentry-proxy" env:"SENTRY_PROXY" usage:"Sentry Proxy"`
-	Token       string        `required:"true" arg:"token" env:"TOKEN" usage:"token" display:"length"`
-	Inverval    time.Duration `required:"true" arg:"interval" env:"INTERVAL" usage:"check interval" default:"60s"`
+	Url         string        `required:"true"  arg:"url"          env:"URL"          usage:"url"`
+	ID          string        `required:"true"  arg:"id"           env:"ID"           usage:"id"`
+	Token       pkg.Token     `required:"true"  arg:"token"        env:"TOKEN"        usage:"token"                display:"length"`
+	Inverval    time.Duration `required:"true"  arg:"interval"     env:"INTERVAL"     usage:"check interval"                        default:"60s"`
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
@@ -44,7 +48,12 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 }
 
 func (a *application) createController() run.Func {
-	return factory.CreateCheckController(pkg.Token(a.Token), "192.168.178.100", a.Inverval)
+	return factory.CreateCheckController(
+		a.Url,
+		a.ID,
+		pkg.Token(a.Token),
+		a.Inverval,
+	)
 }
 
 func (a *application) createHttpServer() run.Func {
@@ -56,7 +65,18 @@ func (a *application) createHttpServer() run.Func {
 		router.Path("/healthz").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/readiness").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/metrics").Handler(promhttp.Handler())
-		router.Path("/setloglevel/{level}").Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
+		router.Path("/setloglevel/{level}").
+			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
+
+		router.Path("/lights").
+			Handler(libhttp.NewErrorHandler(libhttp.NewJsonHandler(libhttp.JsonHandlerFunc(func(ctx context.Context, req *http.Request) (interface{}, error) {
+				bridges, err := factory.CreateBridgesProvider(a.Url, a.ID, pkg.Token(a.Token)).
+					GetBridges(ctx)
+				if err != nil {
+					return nil, errors.Wrapf(ctx, err, "get bridge failed")
+				}
+				return bridges[0].GetLights()
+			}))))
 
 		glog.V(2).Infof("starting http server listen on %s", a.Listen)
 		return libhttp.NewServer(

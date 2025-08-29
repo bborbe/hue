@@ -8,7 +8,11 @@ import (
 	"time"
 )
 
-func NewBetweenMinuteSwitch(now time.Time, fromMinute, untilMinute int, main, fallback Check) Check {
+func NewBetweenMinuteSwitch(
+	now time.Time,
+	fromMinute, untilMinute int,
+	main, fallback Check,
+) Check {
 	return NewSwitch(func() bool {
 		currentMinute := now.Minute()
 		if fromMinute < untilMinute {

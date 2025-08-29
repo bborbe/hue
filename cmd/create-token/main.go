@@ -11,20 +11,22 @@ import (
 
 	"github.com/amimof/huego"
 	"github.com/bborbe/errors"
-
-	"github.com/bborbe/hue/pkg"
+	libsentry "github.com/bborbe/sentry"
+	"github.com/bborbe/service"
 )
-
-type application struct {
-	Name string `required:"true" arg:"name" env:"NAME" usage:"name"`
-}
 
 func main() {
 	app := &application{}
-	os.Exit(pkg.Main(context.Background(), app))
+	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
 }
 
-func (a *application) Run(ctx context.Context) error {
+type application struct {
+	SentryDSN   string `required:"false" arg:"sentry-dsn"   env:"SENTRY_DSN"   usage:"SentryDSN"    display:"length"`
+	SentryProxy string `required:"false" arg:"sentry-proxy" env:"SENTRY_PROXY" usage:"Sentry Proxy"`
+	Name        string `required:"true"  arg:"name"         env:"NAME"         usage:"name"`
+}
+
+func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
 	discover, err := huego.DiscoverContext(ctx)
 	if err != nil {
 		return errors.Wrap(ctx, err, "discover failed")

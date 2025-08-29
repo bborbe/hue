@@ -9,29 +9,34 @@ import (
 	"os"
 
 	"github.com/bborbe/errors"
-	"github.com/golang/glog"
-
 	"github.com/bborbe/hue/pkg"
+	"github.com/bborbe/hue/pkg/factory"
+	libsentry "github.com/bborbe/sentry"
+	"github.com/bborbe/service"
+	"github.com/golang/glog"
 )
-
-type application struct {
-	Token string `required:"true" arg:"token" env:"TOKEN" usage:"token" display:"length"`
-	Light string `required:"true" arg:"light" env:"LIGHT" usage:"Name of light to turn on"`
-}
 
 func main() {
 	app := &application{}
-	os.Exit(pkg.Main(context.Background(), app))
+	os.Exit(service.Main(context.Background(), app, &app.SentryDSN, &app.SentryProxy))
 }
 
-func (a *application) Run(ctx context.Context) error {
-	bridgeProvider := pkg.NewBridgeProviderCache(
-		pkg.NewBridgeProvider(pkg.Token(a.Token)),
-	)
-	bridge, err := bridgeProvider.GetBridge(ctx)
+type application struct {
+	SentryDSN   string `required:"false" arg:"sentry-dsn"   env:"SENTRY_DSN"   usage:"SentryDSN"                display:"length"`
+	SentryProxy string `required:"false" arg:"sentry-proxy" env:"SENTRY_PROXY" usage:"Sentry Proxy"`
+	Url         string `required:"true"  arg:"url"          env:"URL"          usage:"url"`
+	ID          string `required:"true"  arg:"id"           env:"ID"           usage:"id"`
+	Token       string `required:"true"  arg:"token"        env:"TOKEN"        usage:"token"                    display:"length"`
+	Light       string `required:"true"  arg:"light"        env:"LIGHT"        usage:"Name of light to turn on"`
+}
+
+func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	bridgeProvider := factory.CreateBridgesProvider(a.Url, a.ID, pkg.Token(a.Token))
+	bridges, err := bridgeProvider.GetBridges(ctx)
 	if err != nil {
 		return errors.Wrap(ctx, err, "get bridge failed")
 	}
+	bridge := bridges[0]
 
 	light, err := pkg.LightByName(ctx, bridge, pkg.LightName(a.Light))
 	if err != nil {

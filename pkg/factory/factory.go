@@ -8,27 +8,40 @@ import (
 	"time"
 
 	"github.com/amimof/huego"
-	"github.com/bborbe/run"
-
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/check"
+
+	"github.com/bborbe/run"
 )
 
 func CreateCheckController(
+	url string,
+	id string,
 	token pkg.Token,
-	host string,
 	inverval time.Duration,
 ) run.Func {
 	return check.NewCheckCron(
 		check.NewCheckCreator(
-			pkg.NewBridgeProviderFallback(
-				pkg.NewBridgeProviderCache(
-					pkg.NewBridgeProvider(token),
-				),
-				huego.New(host, token.String()),
+			CreateBridgesProvider(
+				url,
+				id,
+				token,
 			),
 		),
 		check.NewChecksRunner(),
 		inverval,
+	)
+}
+
+func CreateBridgesProvider(
+	url string,
+	id string,
+	token pkg.Token,
+) pkg.BridgesProvider {
+	return pkg.NewBridgeProviderFallback(
+		pkg.NewBridgeProviderCache(
+			pkg.NewBridgesProvider(id, token),
+		),
+		huego.New(url, token.String()),
 	)
 }

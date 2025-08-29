@@ -8,12 +8,11 @@ import (
 	"context"
 	"time"
 
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
-
 	"github.com/bborbe/hue/mocks"
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/check"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Between Time Switch", func() {

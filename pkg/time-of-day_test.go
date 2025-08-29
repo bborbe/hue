@@ -7,10 +7,9 @@ package pkg_test
 import (
 	"time"
 
+	"github.com/bborbe/hue/pkg"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-
-	"github.com/bborbe/hue/pkg"
 )
 
 var _ = Describe("Hue Turn On Light", func() {
@@ -32,7 +31,18 @@ var _ = Describe("Hue Turn On Light", func() {
 		Expect(duration).To(Equal(23 * time.Hour))
 	})
 	It("adds 24 hour if zero", func() {
-		duration := timeOfDay.Duration(time.Date(2015, 11, 24, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, 0, time.UTC))
+		duration := timeOfDay.Duration(
+			time.Date(
+				2015,
+				11,
+				24,
+				timeOfDay.Hour,
+				timeOfDay.Minute,
+				timeOfDay.Second,
+				0,
+				time.UTC,
+			),
+		)
 		Expect(duration).To(Equal(24 * time.Hour))
 	})
 	It("return string", func() {

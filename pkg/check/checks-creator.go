@@ -9,24 +9,23 @@ import (
 	"time"
 
 	"github.com/bborbe/errors"
+	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
 	"github.com/kelvins/sunrisesunset"
-
-	"github.com/bborbe/hue/pkg"
 )
 
 type CheckCreator interface {
 	CreateChecks(ctx context.Context) (Checks, error)
 }
 
-func NewCheckCreator(provider pkg.ProvidesBridge) CheckCreator {
+func NewCheckCreator(provider pkg.BridgesProvider) CheckCreator {
 	return &checkCreator{
 		provider: provider,
 	}
 }
 
 type checkCreator struct {
-	provider pkg.ProvidesBridge
+	provider pkg.BridgesProvider
 }
 
 func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
@@ -34,10 +33,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "load location failed")
 	}
-	bridge, err := c.provider.GetBridge(ctx)
+	bridges, err := c.provider.GetBridges(ctx)
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get bridge failed")
 	}
+	bridge := bridges[0]
 
 	now := time.Now()
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
@@ -59,7 +59,8 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get sunrise and sunset failed")
 	}
-	glog.V(2).Infof("now %s sunrise %s sunset %s", now.In(loc).Format("15:04:05"), sunrise.In(loc).Format("15:04:05"), sunset.In(loc).Format("15:04:05"))
+	glog.V(2).
+		Infof("now %s sunrise %s sunset %s", now.In(loc).Format("15:04:05"), sunrise.In(loc).Format("15:04:05"), sunset.In(loc).Format("15:04:05"))
 
 	return Checks{
 		NewBetweenTimeSwitch(

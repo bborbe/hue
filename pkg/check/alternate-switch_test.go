@@ -8,11 +8,10 @@ import (
 	"context"
 	"time"
 
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
-
 	"github.com/bborbe/hue/mocks"
 	"github.com/bborbe/hue/pkg/check"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Alternate Switch", func() {
@@ -28,7 +27,13 @@ var _ = Describe("Alternate Switch", func() {
 	})
 	Context("main active", func() {
 		BeforeEach(func() {
-			alternateSwitch = check.NewAlternateSwitch(time.Unix(0, 0), time.Minute, time.Minute, main, fallback)
+			alternateSwitch = check.NewAlternateSwitch(
+				time.Unix(0, 0),
+				time.Minute,
+				time.Minute,
+				main,
+				fallback,
+			)
 			err = alternateSwitch.Apply(ctx)
 		})
 		It("returns no error", func() {
@@ -43,7 +48,13 @@ var _ = Describe("Alternate Switch", func() {
 	})
 	Context("main active", func() {
 		BeforeEach(func() {
-			alternateSwitch = check.NewAlternateSwitch(time.Unix(60, 0), time.Minute, time.Minute, main, fallback)
+			alternateSwitch = check.NewAlternateSwitch(
+				time.Unix(60, 0),
+				time.Minute,
+				time.Minute,
+				main,
+				fallback,
+			)
 			err = alternateSwitch.Apply(ctx)
 		})
 		It("returns no error", func() {
@@ -58,7 +69,13 @@ var _ = Describe("Alternate Switch", func() {
 	})
 	Context("main active", func() {
 		BeforeEach(func() {
-			alternateSwitch = check.NewAlternateSwitch(time.Unix(120, 0), time.Minute, time.Minute, main, fallback)
+			alternateSwitch = check.NewAlternateSwitch(
+				time.Unix(120, 0),
+				time.Minute,
+				time.Minute,
+				main,
+				fallback,
+			)
 			err = alternateSwitch.Apply(ctx)
 		})
 		It("returns no error", func() {
