@@ -8,6 +8,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## Unreleased
+
+- fix: `export BRANCH` in main Makefile so the `k8s/Makefile apply` bash subshell can substitute `{{"BRANCH" | env}}` in `hue-deploy.yaml`. Without this, `make buca` produced `image: docker.quant.benjamin-borbe.de:443/hue:` (empty tag) and the pod failed with `InvalidImageName`.
+
 ## v0.0.3
 
 - fix: Tag Docker image with `$(BRANCH)` instead of `$(VERSION)` so it matches `k8s/hue-deploy.yaml` (`image: bborbe/hue:{{BRANCH}}`) and keel.sh auto-roll. Regression from kafka-topic-reader template; sibling services (backup etc.) use `$(BRANCH)` for keel-driven deploys.
