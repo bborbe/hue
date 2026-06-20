@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.0.4
 
 - fix: `export BRANCH` in main Makefile so the `k8s/Makefile apply` bash subshell can substitute `{{"BRANCH" | env}}` in `hue-deploy.yaml`. Without this, `make buca` produced `image: docker.quant.benjamin-borbe.de:443/hue:` (empty tag) and the pod failed with `InvalidImageName`.
 
