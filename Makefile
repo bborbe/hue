@@ -43,8 +43,7 @@ generate:
 
 .PHONY: test
 test:
-	# -race
-	go test -mod=mod -p=$${GO_TEST_PARALLEL:-1} -cover $(shell go list -mod=mod ./... | grep -v /vendor/)
+	go test -mod=mod -p=$${GO_TEST_PARALLEL:-1} -cover -race $(shell go list -mod=mod ./... | grep -v /vendor/)
 
 .PHONY: check
 check: vet vulncheck osv-scanner trivy
@@ -153,12 +152,9 @@ apply:
 		cd ..; \
 	done
 
-.PHONY: buca
-buca: build upload clean apply
-
 .PHONY: fix
 fix:
-	@for dir in $$(find `pwd` -type d -name vendor -prune -o -name go.mod -exec dirname "{}" \; | grep -v '^$$'); do \
+	@for dir in $$(find $(CURDIR) -type d -name vendor -prune -o -name go.mod -exec dirname "{}" \; | grep -v '^$$'); do \
 		cd $${dir}; \
 		echo "fix $${dir}"; \
 		go get github.com/go-git/go-git/v5@latest; \
