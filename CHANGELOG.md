@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.0.2
 
 - chore: Modernize Makefile to canonical bborbe pattern (`tools.env`, overridable `VULNCHECK_IGNORE`, panic-safe vulncheck, osv-scanner, trivy)
 - chore: Bump golang.org/x/net v0.43.0 → v0.56.0 (CVE fixes: GO-2026-4440, GO-2026-4441, GO-2026-4918, GO-2026-5025..5030)
