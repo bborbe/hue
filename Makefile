@@ -2,9 +2,6 @@ DOCKER_REGISTRY ?= docker.io
 IMAGE ?= bborbe/hue
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
-ifeq ($(VERSION),)
-	VERSION := $(shell git describe --tags `git rev-list --tags --max-count=1`)
-endif
 
 include tools.env
 
@@ -127,7 +124,7 @@ build: check-go-mod
 	--build-arg BUILD_GIT_VERSION=$$(git describe --tags --always --dirty) \
 	--build-arg BUILD_GIT_COMMIT=$$(git rev-parse --short HEAD) \
 	--build-arg BUILD_DATE=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-	-t $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION) \
+	-t $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH) \
 	-f Dockerfile .
 
 .PHONY: check-go-mod
@@ -142,11 +139,11 @@ check-go-mod:
 
 .PHONY: upload
 upload:
-	docker push $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION)
+	docker push $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH)
 
 .PHONY: clean
 clean:
-	docker rmi $(DOCKER_REGISTRY)/$(IMAGE):$(VERSION) || true
+	docker rmi $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH) || true
 	# docker builder prune -a -f
 	docker builder prune --max-used-space 21474836480 -f || true
 	rm -rf vendor
