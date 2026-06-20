@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.0.3
 
 - fix: Tag Docker image with `$(BRANCH)` instead of `$(VERSION)` so it matches `k8s/hue-deploy.yaml` (`image: bborbe/hue:{{BRANCH}}`) and keel.sh auto-roll. Regression from kafka-topic-reader template; sibling services (backup etc.) use `$(BRANCH)` for keel-driven deploys.
 - fix: `k8s/Makefile apply` now uses the `kubectlquant` wrapper instead of `kubectl --context=$$CLUSTER_CONTEXT`. `quant` is the wrapper alias, not a kubeconfig context name, so the old form failed with `error: context "quant" does not exist`. Matches sibling pattern (backup uses `kubectlhell`).
