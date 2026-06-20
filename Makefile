@@ -3,6 +3,10 @@ IMAGE ?= hue
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
 
+# Export BRANCH so k8s/Makefile's bash subshell sees it for
+# {{"BRANCH" | env}} template substitution in hue-deploy.yaml.
+export BRANCH
+
 include tools.env
 
 .PHONY: default
