@@ -8,8 +8,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 func NewTimeOfDay(timeOfDay pkg.TimeOfDay) Trigger {

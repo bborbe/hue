@@ -8,10 +8,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/bborbe/hue/mocks"
-	"github.com/bborbe/hue/pkg/check"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/bborbe/hue/mocks"
+	"github.com/bborbe/hue/pkg/check"
 )
 
 var _ = Describe("Alternate Switch", func() {

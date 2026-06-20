@@ -7,9 +7,10 @@ package pkg_test
 import (
 	"time"
 
-	"github.com/bborbe/hue/pkg"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 var _ = Describe("Hue Turn On Light", func() {

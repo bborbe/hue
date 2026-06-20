@@ -9,11 +9,12 @@ import (
 	"os"
 
 	"github.com/bborbe/errors"
-	"github.com/bborbe/hue/pkg"
-	"github.com/bborbe/hue/pkg/factory"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	"github.com/golang/glog"
+
+	"github.com/bborbe/hue/pkg"
+	"github.com/bborbe/hue/pkg/factory"
 )
 
 func main() {

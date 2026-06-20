@@ -9,9 +9,10 @@ import (
 	"time"
 
 	"github.com/bborbe/errors"
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
 	"github.com/kelvins/sunrisesunset"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 type CheckCreator interface {

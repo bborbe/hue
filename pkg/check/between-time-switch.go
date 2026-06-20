@@ -7,8 +7,9 @@ package check
 import (
 	"time"
 
-	"github.com/bborbe/hue/pkg"
 	"github.com/golang/glog"
+
+	"github.com/bborbe/hue/pkg"
 )
 
 // NewBetweenTimeSwitch turns on main between the given hours and fallback if not

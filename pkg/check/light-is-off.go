@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/amimof/huego"
+
 	"github.com/bborbe/hue/pkg"
 )
 

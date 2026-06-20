@@ -9,9 +9,8 @@ import (
 	"time"
 
 	"github.com/bborbe/errors"
-	"github.com/golang/glog"
-
 	"github.com/bborbe/run"
+	"github.com/golang/glog"
 )
 
 func NewCheckCron(

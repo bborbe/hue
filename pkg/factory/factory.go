@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/amimof/huego"
+	"github.com/bborbe/run"
+
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/check"
-
-	"github.com/bborbe/run"
 )
 
 func CreateCheckController(

@@ -12,16 +12,16 @@ import (
 
 	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
-	"github.com/bborbe/hue/pkg"
-	"github.com/bborbe/hue/pkg/factory"
 	"github.com/bborbe/log"
+	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/bborbe/run"
+	"github.com/bborbe/hue/pkg"
+	"github.com/bborbe/hue/pkg/factory"
 )
 
 func main() {
