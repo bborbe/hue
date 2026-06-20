@@ -18,6 +18,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - chore: Add .golangci.yml, .osv-scanner.toml, .trivyignore for new check targets
 - fix: Correct `CLUSTER_CONTEXT=fire` → `quant` in k8s/k8s.env (matches actual deploy target `hue.quant.benjamin-borbe.de`)
 - docs: Add CLAUDE.md with dark-factory workflow, architecture map, and key design decisions
+- chore: Remove leftover `fix` Makefile target inherited from kafka-topic-reader template (`go get @latest` is non-reproducible; `updater go` handles dep bumps)
 
 ## v0.0.1
 
