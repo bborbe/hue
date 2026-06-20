@@ -16,6 +16,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - chore: Drop tools.go in favor of pinned `@VERSION` invocations from `tools.env`
 - test: Gate `-race` behind `ENABLE_RACE` to avoid cmd/* gexec SIGSEGV flakes
 - chore: Add .golangci.yml, .osv-scanner.toml, .trivyignore for new check targets
+- fix: Correct `CLUSTER_CONTEXT=fire` → `quant` in k8s/k8s.env (matches actual deploy target `hue.quant.benjamin-borbe.de`)
 
 ## v0.0.1
 
