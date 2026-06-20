@@ -12,6 +12,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - fix: Tag Docker image with `$(BRANCH)` instead of `$(VERSION)` so it matches `k8s/hue-deploy.yaml` (`image: bborbe/hue:{{BRANCH}}`) and keel.sh auto-roll. Regression from kafka-topic-reader template; sibling services (backup etc.) use `$(BRANCH)` for keel-driven deploys.
 - fix: `k8s/Makefile apply` now uses the `kubectlquant` wrapper instead of `kubectl --context=$$CLUSTER_CONTEXT`. `quant` is the wrapper alias, not a kubeconfig context name, so the old form failed with `error: context "quant" does not exist`. Matches sibling pattern (backup uses `kubectlhell`).
+- chore: Switch Docker registry from `docker.io/bborbe/hue` to the private `docker.quant.benjamin-borbe.de:443/hue` (matches `recurring-task-creator` pattern). Push image stays internal, pulls are colocated with the quant cluster, no public registry bloat for an internal infra service.
 
 ## v0.0.2
 

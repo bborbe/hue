@@ -63,7 +63,7 @@ spec:
                 secretKeyRef:
                   name: hue
                   key: token
-          image: 'docker.io/bborbe/hue:{{"BRANCH" | env}}'
+          image: '{{"DOCKER_REGISTRY" | env}}/hue:{{"BRANCH" | env}}'
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 5
