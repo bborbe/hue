@@ -43,6 +43,10 @@ type application struct {
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	// SetBuildInfo is nil-safe: libmetrics.NewBuildInfoMetrics().SetBuildInfo
+	// guards `buildDate == nil` and returns early without touching the gauge
+	// (see github.com/bborbe/metrics/metrics_build_info.go SetBuildInfo).
+	// Safe to call with a.BuildDate even when BUILD_DATE env is unset.
 	libmetrics.NewBuildInfoMetrics().SetBuildInfo(a.BuildGitVersion, a.BuildGitCommit, a.BuildDate)
 	return service.Run(
 		ctx,
