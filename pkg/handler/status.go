@@ -40,6 +40,15 @@ func NewStatusHandler(bridgesProvider pkg.BridgesProvider) libhttp.WithError {
 			}
 			resp := StatusResponse{On: []string{}, Off: []string{}}
 			for _, light := range lights {
+				select {
+				case <-ctx.Done():
+					return nil, errors.Wrap(
+						ctx,
+						ctx.Err(),
+						"context cancelled while classifying lights",
+					)
+				default:
+				}
 				if light.State != nil && light.State.On {
 					resp.On = append(resp.On, light.Name)
 					continue

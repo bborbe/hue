@@ -69,6 +69,7 @@ func (a *application) createHttpServer() run.Func {
 		router.Path("/metrics").Handler(promhttp.Handler())
 		router.Path("/setloglevel/{level}").
 			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
+		router.Path("/gc").Handler(libhttp.NewGarbageCollectorHandler())
 		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
 		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))
 
