@@ -15,6 +15,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - feat: Add `/status` JSON endpoint exposing `{"on": [...names...], "off": [...names...]}` for at-a-glance fleet view across the bridge's lights. Sorted name lists for stable output.
 - chore: Right-size k8s resources — live steady-state is 2m CPU / 26Mi RAM; limits `1000m`/`1000Mi` were 500×/38× headroom (effectively no limit). New: request `20m`/`100Mi`, limit `200m`/`256Mi`. Frees ~100Mi reservation back to the node, keeps generous safety margin (100× CPU / 10× RAM at limit).
 - docs: Add `LICENSE` (BSD-2-Clause) and `## License` section in `README.md` — public-repo paperwork that was missing since the visibility flip.
+- fix: Sanitize `/` in `BRANCH` for the Docker image tag (`tr '/' '-'`). Docker tags reject `/` in the tag component, so `make build` on a feature branch like `chore/build-info-pattern` produced `invalid reference format`. Caught only by running the Dev-Guide-mandated `make build` canary before flipping PR #6 ready. Matches sibling pattern (recurring-task-creator, dark-factory).
 
 ## v0.0.4
 
