@@ -51,3 +51,7 @@ https://discovery.meethue.com/
     }
 ]
 ```
+
+## License
+
+BSD 2-Clause — see [LICENSE](LICENSE).

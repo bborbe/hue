@@ -14,6 +14,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - refactor: Extract inline `/lights` handler from `main.go` into `pkg/handler/list-lights.go` + `factory.CreateListLightsHandler`. Per [HTTP Handler Refactoring Guide](https://github.com/bborbe/coding-guidelines/blob/master/docs/go-http-handler-refactoring-guide.md): handlers belong in `pkg/handler/`, factory wires them. Side effect: the cache layer in `BridgesProvider` (`NewBridgeProviderCache`) was being thrown away every request because the provider was rebuilt inline; the refactor builds it once at server-creation time and shares it across requests.
 - feat: Add `/status` JSON endpoint exposing `{"on": [...names...], "off": [...names...]}` for at-a-glance fleet view across the bridge's lights. Sorted name lists for stable output.
 - chore: Right-size k8s resources — live steady-state is 2m CPU / 26Mi RAM; limits `1000m`/`1000Mi` were 500×/38× headroom (effectively no limit). New: request `20m`/`100Mi`, limit `200m`/`256Mi`. Frees ~100Mi reservation back to the node, keeps generous safety margin (100× CPU / 10× RAM at limit).
+- docs: Add `LICENSE` (BSD-2-Clause) and `## License` section in `README.md` — public-repo paperwork that was missing since the visibility flip.
 
 ## v0.0.4
 
