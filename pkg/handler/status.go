@@ -38,6 +38,9 @@ func NewStatusHandler(bridgesProvider pkg.BridgesProvider) libhttp.WithError {
 			if err != nil {
 				return nil, errors.Wrap(ctx, err, "get lights failed")
 			}
+			if err := ctx.Err(); err != nil {
+				return nil, errors.Wrap(ctx, err, "context cancelled before classifying lights")
+			}
 			resp := StatusResponse{On: []string{}, Off: []string{}}
 			for _, light := range lights {
 				select {
