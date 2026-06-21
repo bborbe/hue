@@ -45,8 +45,13 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	now := time.Now()
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
 
-	aquariumLightOnHour := 10
-	aquariumLightOffhour := aquariumLightOnHour + 2
+	//aquariumLightOnHour := 10
+	//aquariumLightOffhour := aquariumLightOnHour + 10
+
+	// extrem summer fallback
+	aquariumLightOnHour := 20
+	aquariumLightOffhour := aquariumLightOnHour + 3
+
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
 	artemiaLightOnHour := 8
