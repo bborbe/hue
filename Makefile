@@ -1,6 +1,6 @@
 DOCKER_REGISTRY ?= docker.quant.benjamin-borbe.de:443
 IMAGE ?= hue
-BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
+BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD | tr '/' '-')
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
 
 # Export BRANCH so k8s/Makefile's bash subshell sees it for

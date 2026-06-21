@@ -7,9 +7,11 @@ require (
 	github.com/bborbe/errors v1.5.13
 	github.com/bborbe/http v1.26.13
 	github.com/bborbe/log v1.6.14
+	github.com/bborbe/metrics v0.5.4
 	github.com/bborbe/run v1.9.28
 	github.com/bborbe/sentry v1.9.18
 	github.com/bborbe/service v1.10.1
+	github.com/bborbe/time v1.27.1
 	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
@@ -25,7 +27,6 @@ require (
 	github.com/bborbe/kv v1.21.2 // indirect
 	github.com/bborbe/math v1.3.11 // indirect
 	github.com/bborbe/parse v1.10.13 // indirect
-	github.com/bborbe/time v1.27.1 // indirect
 	github.com/bborbe/validation v1.4.14 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect

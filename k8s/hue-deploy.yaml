@@ -42,6 +42,11 @@ spec:
         - name: service
           args:
             - -v={{"LOGLEVEL" | env}}
+          # BUILD_GIT_VERSION / BUILD_GIT_COMMIT / BUILD_DATE are intentionally
+          # NOT listed below — the Dockerfile bakes them into the image's
+          # runtime ENV at build time (ARG → ENV in the alpine stage), so the
+          # container process inherits them automatically. Matches the
+          # recurring-task-creator deploy pattern.
           env:
             - name: LISTEN
               value: ':9090'
@@ -88,8 +93,8 @@ spec:
             timeoutSeconds: 5
           resources:
             limits:
-              cpu: 1000m
-              memory: 1000Mi
+              cpu: 200m
+              memory: 256Mi
             requests:
               cpu: 20m
-              memory: 200Mi
+              memory: 100Mi

@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Benjamin Borbe All rights reserved.
+// Copyright (c) 2026 Benjamin Borbe All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -45,8 +45,13 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	now := time.Now()
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
 
-	aquariumLightOnHour := 10
-	aquariumLightOffhour := aquariumLightOnHour + 2
+	// Temporary heat-wave evening-only window — operator will revert to the
+	// daytime values below by hand (~1-2 weeks) once the extreme heat is gone.
+	//aquariumLightOnHour := 10
+	//aquariumLightOffhour := aquariumLightOnHour + 10
+	aquariumLightOnHour := 20
+	aquariumLightOffhour := aquariumLightOnHour + 3
+
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
 	artemiaLightOnHour := 8

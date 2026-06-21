@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Benjamin Borbe All rights reserved.
+// Copyright (c) 2026 Benjamin Borbe All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -6,16 +6,16 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
 	"github.com/bborbe/log"
+	libmetrics "github.com/bborbe/metrics"
 	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
+	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -30,29 +30,33 @@ func main() {
 }
 
 type application struct {
-	Listen      string        `required:"true"  arg:"listen"       env:"LISTEN"       usage:"address to listen to"`
-	SentryDSN   string        `required:"false" arg:"sentry-dsn"   env:"SENTRY_DSN"   usage:"SentryDSN"            display:"length"`
-	SentryProxy string        `required:"false" arg:"sentry-proxy" env:"SENTRY_PROXY" usage:"Sentry Proxy"`
-	Url         string        `required:"true"  arg:"url"          env:"URL"          usage:"url"`
-	ID          string        `required:"true"  arg:"id"           env:"ID"           usage:"id"`
-	Token       pkg.Token     `required:"true"  arg:"token"        env:"TOKEN"        usage:"token"                display:"length"`
-	Inverval    time.Duration `required:"true"  arg:"interval"     env:"INTERVAL"     usage:"check interval"                        default:"60s"`
+	Listen          string            `required:"true"  arg:"listen"            env:"LISTEN"            usage:"address to listen to"`
+	SentryDSN       string            `required:"false" arg:"sentry-dsn"        env:"SENTRY_DSN"        usage:"SentryDSN"                 display:"length"`
+	SentryProxy     string            `required:"false" arg:"sentry-proxy"      env:"SENTRY_PROXY"      usage:"Sentry Proxy"`
+	Url             string            `required:"true"  arg:"url"               env:"URL"               usage:"url"`
+	ID              string            `required:"true"  arg:"id"                env:"ID"                usage:"id"`
+	Token           pkg.Token         `required:"true"  arg:"token"             env:"TOKEN"             usage:"token"                     display:"length"`
+	Inverval        time.Duration     `required:"true"  arg:"interval"          env:"INTERVAL"          usage:"check interval"                             default:"60s"`
+	BuildGitVersion string            `required:"false" arg:"build-git-version" env:"BUILD_GIT_VERSION" usage:"Build Git version"                          default:"dev"`
+	BuildGitCommit  string            `required:"false" arg:"build-git-commit"  env:"BUILD_GIT_COMMIT"  usage:"Build Git commit hash"                      default:"none"`
+	BuildDate       *libtime.DateTime `required:"false" arg:"build-date"        env:"BUILD_DATE"        usage:"Build timestamp (RFC3339)"`
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	// SetBuildInfo is nil-safe: libmetrics.NewBuildInfoMetrics().SetBuildInfo
+	// guards `buildDate == nil` and returns early without touching the gauge
+	// (see github.com/bborbe/metrics/metrics_build_info.go SetBuildInfo).
+	// Safe to call with a.BuildDate even when BUILD_DATE env is unset.
+	libmetrics.NewBuildInfoMetrics().SetBuildInfo(a.BuildGitVersion, a.BuildGitCommit, a.BuildDate)
 	return service.Run(
 		ctx,
-		a.createController(),
+		factory.CreateCheckController(
+			a.Url,
+			a.ID,
+			a.Token,
+			a.Inverval,
+		),
 		a.createHttpServer(),
-	)
-}
-
-func (a *application) createController() run.Func {
-	return factory.CreateCheckController(
-		a.Url,
-		a.ID,
-		pkg.Token(a.Token),
-		a.Inverval,
 	)
 }
 
@@ -61,22 +65,17 @@ func (a *application) createHttpServer() run.Func {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
+		bridgesProvider := factory.CreateBridgesProvider(a.Url, a.ID, a.Token)
+
 		router := mux.NewRouter()
 		router.Path("/healthz").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/readiness").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/metrics").Handler(promhttp.Handler())
 		router.Path("/setloglevel/{level}").
 			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
-
-		router.Path("/lights").
-			Handler(libhttp.NewErrorHandler(libhttp.NewJSONHandler(libhttp.JSONHandlerFunc(func(ctx context.Context, req *http.Request) (interface{}, error) {
-				bridges, err := factory.CreateBridgesProvider(a.Url, a.ID, a.Token).
-					GetBridges(ctx)
-				if err != nil {
-					return nil, errors.Wrapf(ctx, err, "get bridge failed")
-				}
-				return bridges[0].GetLights()
-			}))))
+		router.Path("/gc").Handler(libhttp.NewGarbageCollectorHandler())
+		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
+		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))
 
 		glog.V(2).Infof("starting http server listen on %s", a.Listen)
 		return libhttp.NewServer(
