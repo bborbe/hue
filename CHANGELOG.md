@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.1.0
 
 - feat: Add canonical `build_info` Prometheus gauge — wire `BUILD_GIT_VERSION` / `BUILD_GIT_COMMIT` / `BUILD_DATE` build-args (already passed by Makefile) through `Dockerfile` (ARG → OCI labels + ENV) into `main.go` (3 new fields + `libmetrics.NewBuildInfoMetrics().SetBuildInfo(...)`). Enables `count by (version) (build_info)` Prometheus query across the fleet + populates OCI image labels. Matches go-skeleton / recurring-task-creator / kafka-topic-reader.
 - refactor: Extract inline `/lights` handler from `main.go` into `pkg/handler/list-lights.go` + `factory.CreateListLightsHandler`. Per [HTTP Handler Refactoring Guide](https://github.com/bborbe/coding-guidelines/blob/master/docs/go-http-handler-refactoring-guide.md): handlers belong in `pkg/handler/`, factory wires them. Side effect: the cache layer in `BridgesProvider` (`NewBridgeProviderCache`) was being thrown away every request because the provider was rebuilt inline; the refactor builds it once at server-creation time and shares it across requests.
