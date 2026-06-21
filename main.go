@@ -75,8 +75,8 @@ func (a *application) createHttpServer() run.Func {
 			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
 
 		router.Path("/lights").
-			Handler(libhttp.NewErrorHandler(libhttp.NewJsonHandler(libhttp.JsonHandlerFunc(func(ctx context.Context, req *http.Request) (interface{}, error) {
-				bridges, err := factory.CreateBridgesProvider(a.Url, a.ID, pkg.Token(a.Token)).
+			Handler(libhttp.NewErrorHandler(libhttp.NewJSONHandler(libhttp.JSONHandlerFunc(func(ctx context.Context, req *http.Request) (interface{}, error) {
+				bridges, err := factory.CreateBridgesProvider(a.Url, a.ID, a.Token).
 					GetBridges(ctx)
 				if err != nil {
 					return nil, errors.Wrapf(ctx, err, "get bridge failed")

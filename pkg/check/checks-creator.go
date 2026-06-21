@@ -22,15 +22,17 @@ type CheckCreator interface {
 func NewCheckCreator(provider pkg.BridgesProvider) CheckCreator {
 	return &checkCreator{
 		provider: provider,
+		location: "Europe/Berlin",
 	}
 }
 
 type checkCreator struct {
 	provider pkg.BridgesProvider
+	location string
 }
 
 func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
-	loc, err := time.LoadLocation("Europe/Berlin")
+	loc, err := time.LoadLocation(c.location)
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "load location failed")
 	}
@@ -44,7 +46,7 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
 
 	aquariumLightOnHour := 10
-	aquariumLightOffhour := aquariumLightOnHour + 10
+	aquariumLightOffhour := aquariumLightOnHour + 2
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
 	artemiaLightOnHour := 8
