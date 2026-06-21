@@ -13,9 +13,11 @@ import (
 	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
 	"github.com/bborbe/log"
+	libmetrics "github.com/bborbe/metrics"
 	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
+	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -30,16 +32,20 @@ func main() {
 }
 
 type application struct {
-	Listen      string        `required:"true"  arg:"listen"       env:"LISTEN"       usage:"address to listen to"`
-	SentryDSN   string        `required:"false" arg:"sentry-dsn"   env:"SENTRY_DSN"   usage:"SentryDSN"            display:"length"`
-	SentryProxy string        `required:"false" arg:"sentry-proxy" env:"SENTRY_PROXY" usage:"Sentry Proxy"`
-	Url         string        `required:"true"  arg:"url"          env:"URL"          usage:"url"`
-	ID          string        `required:"true"  arg:"id"           env:"ID"           usage:"id"`
-	Token       pkg.Token     `required:"true"  arg:"token"        env:"TOKEN"        usage:"token"                display:"length"`
-	Inverval    time.Duration `required:"true"  arg:"interval"     env:"INTERVAL"     usage:"check interval"                        default:"60s"`
+	Listen          string            `required:"true"  arg:"listen"            env:"LISTEN"            usage:"address to listen to"`
+	SentryDSN       string            `required:"false" arg:"sentry-dsn"        env:"SENTRY_DSN"        usage:"SentryDSN"                 display:"length"`
+	SentryProxy     string            `required:"false" arg:"sentry-proxy"      env:"SENTRY_PROXY"      usage:"Sentry Proxy"`
+	Url             string            `required:"true"  arg:"url"               env:"URL"               usage:"url"`
+	ID              string            `required:"true"  arg:"id"                env:"ID"                usage:"id"`
+	Token           pkg.Token         `required:"true"  arg:"token"             env:"TOKEN"             usage:"token"                     display:"length"`
+	Inverval        time.Duration     `required:"true"  arg:"interval"          env:"INTERVAL"          usage:"check interval"                             default:"60s"`
+	BuildGitVersion string            `required:"false" arg:"build-git-version" env:"BUILD_GIT_VERSION" usage:"Build Git version"                          default:"dev"`
+	BuildGitCommit  string            `required:"false" arg:"build-git-commit"  env:"BUILD_GIT_COMMIT"  usage:"Build Git commit hash"                      default:"none"`
+	BuildDate       *libtime.DateTime `required:"false" arg:"build-date"        env:"BUILD_DATE"        usage:"Build timestamp (RFC3339)"`
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	libmetrics.NewBuildInfoMetrics().SetBuildInfo(a.BuildGitVersion, a.BuildGitCommit, a.BuildDate)
 	return service.Run(
 		ctx,
 		a.createController(),
