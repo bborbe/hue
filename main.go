@@ -6,11 +6,9 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"time"
 
-	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
 	"github.com/bborbe/log"
 	libmetrics "github.com/bborbe/metrics"
@@ -48,17 +46,13 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	libmetrics.NewBuildInfoMetrics().SetBuildInfo(a.BuildGitVersion, a.BuildGitCommit, a.BuildDate)
 	return service.Run(
 		ctx,
-		a.createController(),
+		factory.CreateCheckController(
+			a.Url,
+			a.ID,
+			a.Token,
+			a.Inverval,
+		),
 		a.createHttpServer(),
-	)
-}
-
-func (a *application) createController() run.Func {
-	return factory.CreateCheckController(
-		a.Url,
-		a.ID,
-		pkg.Token(a.Token),
-		a.Inverval,
 	)
 }
 
@@ -67,22 +61,16 @@ func (a *application) createHttpServer() run.Func {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
+		bridgesProvider := factory.CreateBridgesProvider(a.Url, a.ID, a.Token)
+
 		router := mux.NewRouter()
 		router.Path("/healthz").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/readiness").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/metrics").Handler(promhttp.Handler())
 		router.Path("/setloglevel/{level}").
 			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
-
-		router.Path("/lights").
-			Handler(libhttp.NewErrorHandler(libhttp.NewJSONHandler(libhttp.JSONHandlerFunc(func(ctx context.Context, req *http.Request) (interface{}, error) {
-				bridges, err := factory.CreateBridgesProvider(a.Url, a.ID, a.Token).
-					GetBridges(ctx)
-				if err != nil {
-					return nil, errors.Wrapf(ctx, err, "get bridge failed")
-				}
-				return bridges[0].GetLights()
-			}))))
+		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
+		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))
 
 		glog.V(2).Infof("starting http server listen on %s", a.Listen)
 		return libhttp.NewServer(
