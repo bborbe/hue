@@ -50,6 +50,11 @@ spec:
           env:
             - name: LISTEN
               value: ':9090'
+            # SUMMER_MODE toggles the aquarium light schedule between the
+            # standard daytime window (10:00-20:00, default) and the
+            # evening-only window (20:00-23:00, set to "true" for heat waves).
+            - name: SUMMER_MODE
+              value: "false"
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

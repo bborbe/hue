@@ -19,16 +19,18 @@ type CheckCreator interface {
 	CreateChecks(ctx context.Context) (Checks, error)
 }
 
-func NewCheckCreator(provider pkg.BridgesProvider) CheckCreator {
+func NewCheckCreator(provider pkg.BridgesProvider, summerMode bool) CheckCreator {
 	return &checkCreator{
-		provider: provider,
-		location: "Europe/Berlin",
+		provider:   provider,
+		summerMode: summerMode,
+		location:   "Europe/Berlin",
 	}
 }
 
 type checkCreator struct {
-	provider pkg.BridgesProvider
-	location string
+	provider   pkg.BridgesProvider
+	summerMode bool
+	location   string
 }
 
 func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
@@ -45,8 +47,15 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	now := time.Now()
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
 
-	aquariumLightOnHour := 10
-	aquariumLightOffhour := aquariumLightOnHour + 10
+	var aquariumLightOnHour int
+	var aquariumLightOffhour int
+	if c.summerMode {
+		aquariumLightOnHour = 20
+		aquariumLightOffhour = aquariumLightOnHour + 3
+	} else {
+		aquariumLightOnHour = 10
+		aquariumLightOffhour = aquariumLightOnHour + 10
+	}
 
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2

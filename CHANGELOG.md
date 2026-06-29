@@ -10,6 +10,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- feat: Add `HUE_SUMMER_MODE` env var / `-summer-mode` CLI flag toggling the aquarium light schedule between the standard daytime window (10:00-20:00, default) and the evening-only window (20:00-23:00) for sustained-heat conditions. Defaults to `false` so existing deploys behave identically; flip to `"true"` in `k8s/hue-deploy.yaml` to activate the summer window. Cascades through the shared `aquariumLightOnHour` / `aquariumLightOffhour` variables — covers Aquarium Licht, Aquarium Rack, Aquarium CO2, Garnelen Licht 1/2, Jana Aqua Light. Artemia, Skimmer, CO2 base, Jana Aqua Skimmer schedules unaffected.
 - Restore aquarium light schedule to daytime window (10:00-20:00) — revert temporary heat-wave override from 607c454
 
 ## v0.1.0
