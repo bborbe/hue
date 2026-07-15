@@ -12,6 +12,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - chore: update bborbe dependencies (errors, http, log, metrics, run, sentry, service, time, ginkgo/gomega + indirects) to latest
 - fix: bump Go 1.26.4 → 1.26.5 (go.mod + Dockerfile) to clear stdlib GO-2026-5856
+- fix: bump golang.org/x/text v0.38.0 → v0.39.0 to clear CVE-2026-56852 (Trivy)
 
 ## v0.2.0
 
