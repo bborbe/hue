@@ -1,33 +1,33 @@
 module github.com/bborbe/hue
 
-go 1.26.4
+go 1.26.5
 
 require (
 	github.com/amimof/huego v1.2.1
-	github.com/bborbe/errors v1.5.13
-	github.com/bborbe/http v1.26.13
-	github.com/bborbe/log v1.6.14
-	github.com/bborbe/metrics v0.5.4
-	github.com/bborbe/run v1.9.28
-	github.com/bborbe/sentry v1.9.18
-	github.com/bborbe/service v1.10.1
-	github.com/bborbe/time v1.27.1
+	github.com/bborbe/errors v1.5.15
+	github.com/bborbe/http v1.26.16
+	github.com/bborbe/log v1.6.17
+	github.com/bborbe/metrics v0.5.7
+	github.com/bborbe/run v1.9.30
+	github.com/bborbe/sentry v1.9.22
+	github.com/bborbe/service v1.10.4
+	github.com/bborbe/time v1.27.5
 	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
-	github.com/onsi/ginkgo/v2 v2.31.0
-	github.com/onsi/gomega v1.42.0
+	github.com/onsi/ginkgo/v2 v2.32.0
+	github.com/onsi/gomega v1.42.1
 	github.com/prometheus/client_golang v1.23.2
 )
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
-	github.com/bborbe/argument/v2 v2.12.27 // indirect
-	github.com/bborbe/collection v1.20.13 // indirect
-	github.com/bborbe/kv v1.21.2 // indirect
-	github.com/bborbe/math v1.3.11 // indirect
-	github.com/bborbe/parse v1.10.13 // indirect
-	github.com/bborbe/validation v1.4.14 // indirect
+	github.com/bborbe/argument/v2 v2.12.29 // indirect
+	github.com/bborbe/collection v1.20.16 // indirect
+	github.com/bborbe/kv v1.21.4 // indirect
+	github.com/bborbe/math v1.3.12 // indirect
+	github.com/bborbe/parse v1.10.16 // indirect
+	github.com/bborbe/validation v1.4.16 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/getsentry/sentry-go v0.47.0 // indirect

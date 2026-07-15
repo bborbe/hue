@@ -8,6 +8,11 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## Unreleased
+
+- chore: update bborbe dependencies (errors, http, log, metrics, run, sentry, service, time, ginkgo/gomega + indirects) to latest
+- fix: bump Go 1.26.4 → 1.26.5 (go.mod + Dockerfile) to clear stdlib GO-2026-5856
+
 ## v0.2.0
 
 - feat: Add `HUE_SUMMER_MODE` env var / `-summer-mode` CLI flag toggling the aquarium light schedule between the standard daytime window (10:00-20:00, default) and the evening-only window (20:00-23:00) for sustained-heat conditions. Defaults to `false` so existing deploys behave identically; flip to `"true"` in `k8s/hue-deploy.yaml` to activate the summer window. Cascades through the shared `aquariumLightOnHour` / `aquariumLightOffhour` variables — covers Aquarium Licht, Aquarium Rack, Aquarium CO2, Garnelen Licht 1/2, Jana Aqua Light. Artemia, Skimmer, CO2 base, Jana Aqua Skimmer schedules unaffected.
