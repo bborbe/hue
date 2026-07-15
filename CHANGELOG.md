@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.2.1
 
 - chore: update bborbe dependencies (errors, http, log, metrics, run, sentry, service, time, ginkgo/gomega + indirects) to latest
 - fix: bump Go 1.26.4 → 1.26.5 (go.mod + Dockerfile) to clear stdlib GO-2026-5856
