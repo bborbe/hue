@@ -1,4 +1,4 @@
-DOCKER_REGISTRY ?= docker.quant.benjamin-borbe.de:443
+DOCKER_REGISTRY ?= docker.prod.nuke.benjamin-borbe.de:443
 IMAGE ?= hue
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD | tr '/' '-')
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
