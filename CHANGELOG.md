@@ -8,6 +8,12 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## v0.2.3
+
+- Bump bborbe/* deps (errors, http, log, metrics, run, sentry, service, time) and prometheus/client_golang
+- Repoint Docker registry from docker.quant to docker.prod.nuke
+- Remove docker-quant image pull secret and its k8s manifest
+
 ## v0.2.2
 
 - Bump bborbe/errors, http, log, metrics, run, sentry, service, time deps

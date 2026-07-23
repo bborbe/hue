@@ -4,20 +4,20 @@ go 1.26.5
 
 require (
 	github.com/amimof/huego v1.2.1
-	github.com/bborbe/errors v1.5.16
-	github.com/bborbe/http v1.26.17
-	github.com/bborbe/log v1.6.18
-	github.com/bborbe/metrics v0.5.8
-	github.com/bborbe/run v1.9.31
-	github.com/bborbe/sentry v1.9.23
-	github.com/bborbe/service v1.10.5
-	github.com/bborbe/time v1.27.6
+	github.com/bborbe/errors v1.5.17
+	github.com/bborbe/http v1.26.18
+	github.com/bborbe/log v1.6.19
+	github.com/bborbe/metrics v0.5.9
+	github.com/bborbe/run v1.9.32
+	github.com/bborbe/sentry v1.9.24
+	github.com/bborbe/service v1.10.6
+	github.com/bborbe/time v1.27.7
 	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
 	github.com/onsi/ginkgo/v2 v2.32.0
 	github.com/onsi/gomega v1.42.1
-	github.com/prometheus/client_golang v1.23.2
+	github.com/prometheus/client_golang v1.24.0
 )
 
 require (
@@ -40,13 +40,13 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
-	github.com/prometheus/common v0.69.0 // indirect
-	github.com/prometheus/procfs v0.20.1 // indirect
+	github.com/prometheus/common v0.70.0 // indirect
+	github.com/prometheus/procfs v0.21.1 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
