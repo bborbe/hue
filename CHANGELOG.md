@@ -8,6 +8,12 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## Unreleased
+
+- fix: inject libtime.CurrentDateTimeGetter into CheckCreator so the generated schedule is deterministic and testable
+- test: assert the aquarium window differs between summer and winter mode at a fixed instant, replacing a bare length check
+- fix: construct the clock in main.go and inject it through CreateCheckController rather than creating it inside the factory
+
 ## v0.2.3
 
 - Bump bborbe/* deps (errors, http, log, metrics, run, sentry, service, time) and prometheus/client_golang

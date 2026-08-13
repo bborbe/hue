@@ -57,6 +57,7 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 			a.Token,
 			a.Inverval,
 			a.SummerMode,
+			libtime.NewCurrentDateTime(),
 		),
 		a.createHttpServer(),
 	)

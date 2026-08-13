@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bborbe/errors"
+	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
 	"github.com/kelvins/sunrisesunset"
 
@@ -19,18 +20,24 @@ type CheckCreator interface {
 	CreateChecks(ctx context.Context) (Checks, error)
 }
 
-func NewCheckCreator(provider pkg.BridgesProvider, summerMode bool) CheckCreator {
+func NewCheckCreator(
+	provider pkg.BridgesProvider,
+	summerMode bool,
+	currentDateTimeGetter libtime.CurrentDateTimeGetter,
+) CheckCreator {
 	return &checkCreator{
-		provider:   provider,
-		summerMode: summerMode,
-		location:   "Europe/Berlin",
+		provider:              provider,
+		summerMode:            summerMode,
+		location:              "Europe/Berlin",
+		currentDateTimeGetter: currentDateTimeGetter,
 	}
 }
 
 type checkCreator struct {
-	provider   pkg.BridgesProvider
-	summerMode bool
-	location   string
+	provider              pkg.BridgesProvider
+	summerMode            bool
+	location              string
+	currentDateTimeGetter libtime.CurrentDateTimeGetter
 }
 
 func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
@@ -44,7 +51,7 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	}
 	bridge := bridges[0]
 
-	now := time.Now()
+	now := c.currentDateTimeGetter.Now().Time()
 	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
 
 	var aquariumLightOnHour int
