@@ -11,6 +11,7 @@ import (
 	"github.com/amimof/huego"
 	libhttp "github.com/bborbe/http"
 	"github.com/bborbe/run"
+	libtime "github.com/bborbe/time"
 
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/check"
@@ -32,6 +33,7 @@ func CreateCheckController(
 				token,
 			),
 			summerMode,
+			libtime.NewCurrentDateTime(),
 		),
 		check.NewChecksRunner(),
 		inverval,
