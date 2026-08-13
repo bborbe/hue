@@ -24,6 +24,7 @@ func CreateCheckController(
 	token pkg.Token,
 	inverval time.Duration,
 	summerMode bool,
+	currentDateTimeGetter libtime.CurrentDateTimeGetter,
 ) run.Func {
 	return check.NewCheckCron(
 		check.NewCheckCreator(
@@ -33,7 +34,7 @@ func CreateCheckController(
 				token,
 			),
 			summerMode,
-			libtime.NewCurrentDateTime(),
+			currentDateTimeGetter,
 		),
 		check.NewChecksRunner(),
 		inverval,

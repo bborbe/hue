@@ -12,6 +12,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - fix: inject libtime.CurrentDateTimeGetter into CheckCreator so the generated schedule is deterministic and testable
 - test: assert the aquarium window differs between summer and winter mode at a fixed instant, replacing a bare length check
+- fix: construct the clock in main.go and inject it through CreateCheckController rather than creating it inside the factory
 
 ## v0.2.3
 
