@@ -10,7 +10,11 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-- update Go to 1.26.6 and update dependencies (golang.org/x/mod, bborbe/*, sentry-go, prometheus/*, onsi/ginkgo)
+- chore: update bborbe module dependencies — `http` v1.26.20 -> v1.26.21, `run` v1.9.34 -> v1.9.35, `time` v1.27.8 -> v1.27.9, plus transitive `collection` v1.20.21, `kv` v1.21.10, `math` v1.3.19, `parse` v1.10.20
+
+## v0.2.5
+
+- update Go to 1.26.6 and update dependencies (clears GO-2026-6179, GO-2026-6180, GO-2026-5026, GO-2026-5972, GO-2026-6089, GO-2026-6090, GO-2026-6218)
 
 ## v0.2.4
 
