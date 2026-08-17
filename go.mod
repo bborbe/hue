@@ -5,13 +5,13 @@ go 1.26.6
 require (
 	github.com/amimof/huego v1.2.1
 	github.com/bborbe/errors v1.5.17
-	github.com/bborbe/http v1.26.20
+	github.com/bborbe/http v1.26.21
 	github.com/bborbe/log v1.6.22
 	github.com/bborbe/metrics v0.5.12
-	github.com/bborbe/run v1.9.34
+	github.com/bborbe/run v1.9.35
 	github.com/bborbe/sentry v1.9.24
 	github.com/bborbe/service v1.10.8
-	github.com/bborbe/time v1.27.8
+	github.com/bborbe/time v1.27.9
 	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
@@ -23,10 +23,10 @@ require (
 require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/bborbe/argument/v2 v2.12.34 // indirect
-	github.com/bborbe/collection v1.20.20 // indirect
-	github.com/bborbe/kv v1.21.9 // indirect
-	github.com/bborbe/math v1.3.18 // indirect
-	github.com/bborbe/parse v1.10.19 // indirect
+	github.com/bborbe/collection v1.20.21 // indirect
+	github.com/bborbe/kv v1.21.10 // indirect
+	github.com/bborbe/math v1.3.19 // indirect
+	github.com/bborbe/parse v1.10.20 // indirect
 	github.com/bborbe/validation v1.4.19 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -36,7 +36,6 @@ require (
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20260802141513-ef3492d7dac3 // indirect
 	github.com/jarcoal/httpmock v1.4.1 // indirect
-	github.com/maxbrunsfeld/counterfeiter/v6 v6.12.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
