@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: 'traefik'
   rules:
-    - host: 'hue.quant.benjamin-borbe.de'
+    - host: 'hue.prod.nuke.benjamin-borbe.de'
       http:
         paths:
           - backend:
