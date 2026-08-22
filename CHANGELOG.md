@@ -8,6 +8,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+
+## Unreleased
+
+- exclude no-fix docker/containerd advisories in checker config (GO-2026-4883/4887/5064/5338/5622/5932 v1 no-fix)
 ## v0.2.7
 
 - chore: Ensure Go 1.27 tooling compatibility — run `gofmt -w` last in the `format` target (after golines so its wrapping is normalized), bump golangci-lint to v2.13.1 (staticcheck buildir panic fix) and errcheck to v1.20.0 (missing-types fix)

@@ -7,3 +7,6 @@ CVE-2026-41568
 
 # go.etcd.io/bbolt v1.4.3 dep, no fix available
 CVE-2026-33817
+
+# GO-2026-4923: no-fix advisory (unmaintained/deprecated package)
+GO-2026-4923
