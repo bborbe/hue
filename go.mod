@@ -1,6 +1,6 @@
 module github.com/bborbe/hue
 
-go 1.26.6
+go 1.27.0
 
 require (
 	github.com/amimof/huego v1.2.1
