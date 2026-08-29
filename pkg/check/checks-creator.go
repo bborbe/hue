@@ -171,11 +171,13 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 		NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
-				Hour:     aquariumLightOnHour,
+				Hour:     12,
+				Minute:   30,
 				Location: loc,
 			},
 			pkg.TimeOfDay{
-				Hour:     aquariumLightOffhour,
+				Hour:     22,
+				Minute:   30,
 				Location: loc,
 			},
 			NewLightIsOn(bridge, "Jana Aqua Light"),

@@ -12,6 +12,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 - feat: opt into `autoMerge.trivial` for mechanically-trivial update PRs
+- feat: Give "Jana Aqua Light" its own dedicated light window (on 12:30, off 22:30 Europe/Berlin) instead of sharing the aquarium window, fixed regardless of `SUMMER_MODE`. All other aquarium schedules (Aquarium Licht, Aquarium Rack, Aquarium CO2, Garnelen Licht 1/2, Artemia Licht, Aquarium Skimmer, Jana Aqua Skimmer) unchanged.
 
 ## v0.2.10
 
