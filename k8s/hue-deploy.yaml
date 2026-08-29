@@ -27,15 +27,13 @@ spec:
       labels:
         app: hue
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node_type
-                    operator: In
-                    values:
-                      - 'agent'
+      # No nodeAffinity (2026-08-21). This pinned to node_type=agent, a label that
+      # only exists on the old combined quant cluster; on nuke-prod the single
+      # worker is node_type=prod, so the pod sat Pending. Same bug as
+      # quant/chromium-browser.
+      #
+      # replicas stays 1 and hue is deployed ONLY to nuke-prod -- two live hue
+      # instances would both drive the physical lights.
       containers:
         - name: service
           args:
