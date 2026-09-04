@@ -9,7 +9,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
-## Unreleased
+## v0.3.2
 
 - chore: update github.com/bborbe/metrics to v0.6.1, github.com/bborbe/run to v1.10.2
 
