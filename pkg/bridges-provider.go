@@ -6,10 +6,10 @@ package pkg
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/amimof/huego"
 	"github.com/bborbe/errors"
-	"github.com/golang/glog"
 )
 
 //counterfeiter:generate -o ../mocks/bridges-provider.go --fake-name BridgesProvider . BridgesProvider
@@ -24,7 +24,7 @@ func NewBridgesProvider(id string, token Token) BridgesProvider {
 		if err != nil {
 			return nil, errors.Wrap(ctx, err, "discover failed")
 		}
-		glog.V(2).Infof("list %+v", list)
+		slog.Debug("discovered bridges", "count", len(list))
 
 		if len(list) == 0 {
 			return nil, errors.New(ctx, "not found")
@@ -36,7 +36,7 @@ func NewBridgesProvider(id string, token Token) BridgesProvider {
 			if discover.ID != id {
 				continue
 			}
-			glog.V(2).Infof("found: %s %s %s", discover.ID, discover.Host, discover.User)
+			slog.Debug("found bridge", "id", discover.ID, "host", discover.Host)
 			result = append(result, &huego.Bridge{
 				Host: discover.Host,
 				ID:   discover.ID,

@@ -9,6 +9,12 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- refactor: Migrate all hue Go code from the deprecated `github.com/golang/glog` logger to stdlib `log/slog` with explicit intent-based levels (Info for operator-facing output, Debug for state/heartbeat detail, Warn for failures) and structured key-value attributes
+- refactor: Remove the three unconditional per-cycle heartbeat log lines (checks-cron "all checks applied" / "sleep for", time-of-day "next trigger in")
+- fix: Stop logging the bridge `User` API key and the `%+v` whole-discovery dump; bridge-discovery lines now log count / ID / Host only
+
 ## v0.4.2
 
 - chore: Pin every counterfeiter `//go:generate` directive to `v6.12.2` in the five `*_suite_test.go` files, matching `tools.env`'s `COUNTERFEITER_VERSION`

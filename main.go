@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"time"
 
@@ -17,7 +18,6 @@ import (
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	libtime "github.com/bborbe/time"
-	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -87,7 +87,7 @@ func (a *application) createHttpServer() run.Func {
 		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
 		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))
 
-		glog.V(2).Infof("starting http server listen on %s", a.Listen)
+		slog.Info("starting http server", "listen", a.Listen)
 		return libhttp.NewServer(
 			a.Listen,
 			router,

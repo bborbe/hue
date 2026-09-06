@@ -6,13 +6,13 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"sort"
 
 	"github.com/bborbe/errors"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
-	"github.com/golang/glog"
 
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/factory"
@@ -47,9 +47,9 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	lights := pkg.Lights(hueLights)
 	sort.Sort(lights)
 
-	glog.Infof("found %d lights", len(lights))
+	slog.Info("found lights", "count", len(lights))
 	for _, light := range lights {
-		glog.Infof("'%s' on: %v", light.Name, light.IsOn())
+		slog.Info("light state", "name", light.Name, "on", light.IsOn())
 	}
 	return nil
 }

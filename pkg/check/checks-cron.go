@@ -6,11 +6,11 @@ package check
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/bborbe/errors"
 	"github.com/bborbe/run"
-	"github.com/golang/glog"
 )
 
 func NewCheckCron(
@@ -29,11 +29,8 @@ func NewCheckCron(
 					return errors.Wrapf(ctx, err, "create checks failed")
 				}
 				if err := runner.RunChecks(ctx, checks); err != nil {
-					glog.Warningf("run checks failed: %v", err)
-				} else {
-					glog.V(2).Infof("all checks applied")
+					slog.Warn("run checks failed", "error", err)
 				}
-				glog.V(2).Infof("sleep for %v", interval)
 				select {
 				case <-ctx.Done():
 					return ctx.Err()

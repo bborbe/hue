@@ -6,12 +6,12 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 
 	"github.com/bborbe/errors"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
-	"github.com/golang/glog"
 
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/factory"
@@ -44,12 +44,12 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 		return err
 	}
 	if !light.IsOn() {
-		glog.V(2).Info("light already off")
+		slog.Info("light already off")
 		return nil
 	}
 	if err := light.OffContext(ctx); err != nil {
 		return errors.Wrap(ctx, err, "turn off light failed")
 	}
-	glog.Infof("light turned off")
+	slog.Info("light turned off")
 	return nil
 }

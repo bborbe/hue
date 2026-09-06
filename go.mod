@@ -12,7 +12,6 @@ require (
 	github.com/bborbe/sentry v1.10.0
 	github.com/bborbe/service v1.10.10
 	github.com/bborbe/time v1.27.11
-	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
 	github.com/onsi/ginkgo/v2 v2.32.1
@@ -33,6 +32,7 @@ require (
 	github.com/getsentry/sentry-go v0.49.0 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
+	github.com/golang/glog v1.2.5 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20260902005441-ca85771921e4 // indirect
 	github.com/jarcoal/httpmock v1.4.1 // indirect

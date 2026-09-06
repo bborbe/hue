@@ -5,9 +5,8 @@
 package check
 
 import (
+	"log/slog"
 	"time"
-
-	"github.com/golang/glog"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -39,10 +38,16 @@ func NewBetweenTimeSwitch(now time.Time, from, until pkg.TimeOfDay, main, fallba
 			untilTime = untilTime.Add(time.Hour * 24)
 		}
 		if now.Before(fromTime) || now.After(untilTime) {
-			glog.V(2).Infof("now is not between %s and %s => use fallback", from, until)
+			slog.Debug(
+				"now is not between, use fallback",
+				"from",
+				from.String(),
+				"until",
+				until.String(),
+			)
 			return false
 		}
-		glog.V(2).Infof("now is between %s and %s => use main", from, until)
+		slog.Debug("now is between, use main", "from", from.String(), "until", until.String())
 		return true
 	}, main, fallback)
 }
