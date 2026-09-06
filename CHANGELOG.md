@@ -9,6 +9,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- feat: Add `SunriseSunsetProvider` interface + `NewSunriseSunsetProvider` concrete capability in `pkg/`, wrapping `kelvins/sunrisesunset` with the pre-refactor coordinates (lat 50.1, lon 8.1, UTC offset 0) for constructor injection into the checks layer
+
 ## v0.3.2
 
 - chore: update github.com/bborbe/metrics to v0.6.1, github.com/bborbe/run to v1.10.2
