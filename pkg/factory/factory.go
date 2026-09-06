@@ -40,7 +40,7 @@ func CreateCheckController(
 			location,
 			sunriseSunsetProvider,
 		),
-		check.NewChecksRunner(),
+		check.NewChecksRunner(currentDateTimeGetter),
 		inverval,
 	)
 }

@@ -13,6 +13,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - feat: Add `SunriseSunsetProvider` interface + `NewSunriseSunsetProvider` concrete capability in `pkg/`, wrapping `kelvins/sunrisesunset` with the pre-refactor coordinates (lat 50.1, lon 8.1, UTC offset 0) for constructor injection into the checks layer
 - refactor: Inject the pre-resolved `Europe/Berlin` `*time.Location` and `pkg.SunriseSunsetProvider` into `check.NewCheckCreator` via the constructor, stripping direct `time.LoadLocation` and `sunrisesunset` calls from `pkg/check` business logic; `main.go` now resolves the location once at the composition root
+- refactor: Inject the shared `libtime.CurrentDateTimeGetter` clock into `check.NewChecksRunner` via the constructor for DI parity with `check.NewCheckCreator`; `pkg/factory` threads the same clock instance to both, so the whole checks path shares one clock constructed once in `main.go`
 
 ## v0.3.2
 

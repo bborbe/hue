@@ -1,8 +1,13 @@
 ---
-status: approved
+status: completed
 spec: [001-inject-interfaces-pkg-check]
+summary: Threaded the libtime.CurrentDateTimeGetter clock into check.NewChecksRunner via its constructor for DI parity with NewCheckCreator, wired the same clock instance through factory.CreateCheckController, and confirmed main.go constructs clock, Europe/Berlin location, and sunrise/sunset capability exactly once each
+execution_id: hue-inject-interfaces-pkg-check-exec-007-spec-001-inject-interfaces-pkg-check-wiring
+dark-factory-version: dev
 created: "2026-09-06T12:00:00Z"
 queued: "2026-09-06T10:24:48Z"
+started: "2026-09-06T10:29:21Z"
+completed: "2026-09-06T10:30:26Z"
 ---
 
 # Runner clock constructor + end-to-end composition wiring
