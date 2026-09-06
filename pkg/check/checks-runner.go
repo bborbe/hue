@@ -11,6 +11,7 @@ import (
 	"github.com/golang/glog"
 )
 
+//counterfeiter:generate -o ../../mocks/checks-runner.go --fake-name ChecksRunner . ChecksRunner
 type ChecksRunner interface {
 	RunChecks(ctx context.Context, checks Checks) error
 }
