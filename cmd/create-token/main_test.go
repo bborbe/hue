@@ -15,7 +15,11 @@ import (
 var _ = Describe("Hue Create User", func() {
 	It("Compiles", func() {
 		var err error
-		_, err = gexec.Build("github.com/bborbe/hue/cmd/create-token", "-mod=mod")
+		_, err = gexec.Build(
+			"github.com/bborbe/hue/cmd/create-token",
+			"-mod=mod",
+			"-buildvcs=false",
+		)
 		Expect(err).NotTo(HaveOccurred())
 	})
 })
