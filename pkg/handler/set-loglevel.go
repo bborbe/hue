@@ -53,6 +53,7 @@ func (l *logLevelSetter) ServeHTTP(resp http.ResponseWriter, req *http.Request) 
 		level = slog.LevelDebug
 	}
 	l.setLevel(level)
+	slog.Info("set loglevel", "level", n, "reset_in", l.autoResetDuration)
 	fmt.Fprintf(resp, "set loglevel to %d completed\n", n)
 }
 
@@ -68,8 +69,10 @@ func (l *logLevelSetter) resetLater() {
 	time.Sleep(l.autoResetDuration)
 	l.mux.Lock()
 	defer l.mux.Unlock()
-	if libtime.Now().Sub(l.lastSetTime) <= l.autoResetDuration {
+	if libtime.Now().Sub(l.lastSetTime) < l.autoResetDuration {
+		slog.Debug("skip loglevel reset, set more recently")
 		return // re-set in the meantime; keep the newer level
 	}
+	slog.Info("log level reset to default", "level", l.defaultLevel)
 	l.levelVar.Set(l.defaultLevel)
 }
