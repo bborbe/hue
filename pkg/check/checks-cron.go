@@ -10,14 +10,20 @@ import (
 	"time"
 
 	"github.com/bborbe/errors"
+	"github.com/bborbe/log"
 	"github.com/bborbe/run"
 )
 
+// NewCheckCron creates a run.Func that periodically creates and runs the
+// checks on the given interval, logging run failures at most once per sampling
+// window via the injected sampler factory.
 func NewCheckCron(
 	creator CheckCreator,
 	runner ChecksRunner,
 	interval time.Duration,
+	samplerFactory log.SamplerFactory,
 ) run.Func {
+	sampler := samplerFactory.Sampler()
 	return func(ctx context.Context) error {
 		for {
 			select {
@@ -29,7 +35,9 @@ func NewCheckCron(
 					return errors.Wrapf(ctx, err, "create checks failed")
 				}
 				if err := runner.RunChecks(ctx, checks); err != nil {
-					slog.Warn("run checks failed", "error", err)
+					if sampler.IsSample() {
+						slog.Warn("run checks failed", "error", err)
+					}
 				}
 				select {
 				case <-ctx.Done():

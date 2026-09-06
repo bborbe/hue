@@ -6,9 +6,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/bborbe/errors"
 	libsentry "github.com/bborbe/sentry"
@@ -51,8 +53,10 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	sort.Sort(lights)
 
 	slog.Info("found lights", "count", len(lights))
+	var listing strings.Builder
 	for _, light := range lights {
-		slog.Info("light state", "name", light.Name, "on", light.IsOn())
+		fmt.Fprintf(&listing, "'%s' on: %v\n", light.Name, light.IsOn())
 	}
+	slog.Info("lights listing", "listing", listing.String())
 	return nil
 }

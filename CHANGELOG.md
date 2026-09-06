@@ -16,6 +16,8 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - fix: Stop logging the bridge `User` API key and the `%+v` whole-discovery dump; bridge-discovery lines now log count / ID / Host only
 - feat: Install a default text-to-stderr slog handler per binary — controller default level Debug (matches the LOGLEVEL=2 deployment), the list-lights / turnon-light / turnoff-light CLIs default Info
 - refactor: Convert the /setloglevel/{level} endpoint from the glog-typed log.NewSetLoglevelHandler to a validated slog LevelVar setter (0 → Info, ≥1 → Debug, invalid input → 400, 5-minute auto-reset)
+- refactor: Gate the checks-cron failure warning behind a github.com/bborbe/log time sampler (at most once per 10 minutes), threaded through the factory from main.go; tests use DefaultSamplerFactory
+- refactor: Aggregate the list-lights per-light detail into a single post-loop emission instead of one log call per light
 
 ## v0.4.2
 

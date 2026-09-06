@@ -11,6 +11,7 @@ import (
 
 	"github.com/amimof/huego"
 	libhttp "github.com/bborbe/http"
+	"github.com/bborbe/log"
 	"github.com/bborbe/run"
 	libtime "github.com/bborbe/time"
 
@@ -19,6 +20,8 @@ import (
 	"github.com/bborbe/hue/pkg/handler"
 )
 
+// CreateCheckController wires the check controller, threading the sampler
+// factory through to the checks cron so its failure warning is sampled.
 func CreateCheckController(
 	url string,
 	id string,
@@ -28,6 +31,7 @@ func CreateCheckController(
 	currentDateTimeGetter libtime.CurrentDateTimeGetter,
 	location *time.Location,
 	sunriseSunsetProvider pkg.SunriseSunsetProvider,
+	samplerFactory log.SamplerFactory,
 ) run.Func {
 	return check.NewCheckCron(
 		check.NewCheckCreator(
@@ -43,6 +47,7 @@ func CreateCheckController(
 		),
 		check.NewChecksRunner(currentDateTimeGetter),
 		inverval,
+		samplerFactory,
 	)
 }
 

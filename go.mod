@@ -6,6 +6,7 @@ require (
 	github.com/amimof/huego v1.2.1
 	github.com/bborbe/errors v1.6.0
 	github.com/bborbe/http v1.26.25
+	github.com/bborbe/log v1.6.25
 	github.com/bborbe/metrics v0.6.1
 	github.com/bborbe/run v1.10.2
 	github.com/bborbe/sentry v1.10.0
@@ -23,7 +24,6 @@ require (
 	github.com/bborbe/argument/v2 v2.13.2 // indirect
 	github.com/bborbe/collection v1.20.25 // indirect
 	github.com/bborbe/kv v1.21.12 // indirect
-	github.com/bborbe/log v1.6.25 // indirect
 	github.com/bborbe/math v1.4.8 // indirect
 	github.com/bborbe/parse v1.11.0 // indirect
 	github.com/bborbe/validation v1.4.23 // indirect

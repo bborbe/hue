@@ -12,6 +12,7 @@ import (
 
 	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
+	"github.com/bborbe/log"
 	libmetrics "github.com/bborbe/metrics"
 	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
@@ -58,6 +59,9 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	if err != nil {
 		return errors.Wrap(ctx, err, "load location failed")
 	}
+	samplerFactory := log.SamplerFactoryFunc(func() log.Sampler {
+		return log.NewSampleTime(10 * time.Minute)
+	})
 	return service.Run(
 		ctx,
 		factory.CreateCheckController(
@@ -69,6 +73,7 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 			libtime.NewCurrentDateTime(),
 			location,
 			pkg.NewSunriseSunsetProvider(),
+			samplerFactory,
 		),
 		a.createHttpServer(&logLevel),
 	)

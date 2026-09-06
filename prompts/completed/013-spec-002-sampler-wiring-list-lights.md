@@ -1,8 +1,13 @@
 ---
-status: approved
+status: completed
 spec: [002-migrate-glog-slog]
+summary: 'Wired a github.com/bborbe/log time sampler through NewCheckCron (gating the run-checks failure Warn at most once per 10 minutes), threaded it via the factory from main.go, aggregated the list-lights per-light detail into a single post-loop emission, added a Ginkgo sampler-gate test using the existing mocks + log.DefaultSamplerFactory, and updated the CHANGELOG under ## Unreleased'
+execution_id: hue-migrate-glog-slog-exec-013-spec-002-sampler-wiring-list-lights
+dark-factory-version: dev
 created: "2026-09-06T20:55:00Z"
 queued: "2026-09-06T19:18:14Z"
+started: "2026-09-06T19:24:03Z"
+completed: "2026-09-06T19:27:12Z"
 ---
 
 # Sampler wiring for checks-cron + list-lights aggregation
