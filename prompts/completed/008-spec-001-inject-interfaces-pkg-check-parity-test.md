@@ -1,8 +1,13 @@
 ---
-status: approved
+status: completed
 spec: [001-inject-interfaces-pkg-check]
+summary: Added pkg/check/checks-parity_test.go proving the injected check.NewCheckCreator path renders a byte-for-byte identical 9-check schedule to the pre-refactor reference computation at 2 fixed instants (summer/winter) x both summerMode values
+execution_id: hue-inject-interfaces-pkg-check-exec-008-spec-001-inject-interfaces-pkg-check-parity-test
+dark-factory-version: dev
 created: "2026-09-06T12:00:00Z"
 queued: "2026-09-06T10:24:48Z"
+started: "2026-09-06T10:30:27Z"
+completed: "2026-09-06T10:32:20Z"
 ---
 
 # Parity test: injected path vs pre-refactor reference computation
