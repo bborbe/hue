@@ -15,7 +15,7 @@ import (
 var _ = Describe("Hue List Lights", func() {
 	It("Compiles", func() {
 		var err error
-		_, err = gexec.Build("github.com/bborbe/hue/cmd/list-lights", "-mod=mod")
+		_, err = gexec.Build("github.com/bborbe/hue/cmd/list-lights", "-mod=mod", "-buildvcs=false")
 		Expect(err).NotTo(HaveOccurred())
 	})
 })

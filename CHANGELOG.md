@@ -9,6 +9,12 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- chore: Pin every counterfeiter `//go:generate` directive to `v6.12.2` in the five `*_suite_test.go` files, matching `tools.env`'s `COUNTERFEITER_VERSION`
+- chore: Disable VCS build-info stamping (`-buildvcs=false`) in the `gexec.Build` calls of the five binary-compile smoke tests
+
+
 ## v0.4.1
 
 - test: Add counterfeiter fakes for the `CheckCreator`, `ChecksRunner`, and `BridgesProvider` interfaces to `mocks/`, closing the interface-definition → test-coverage gap flagged by code review
