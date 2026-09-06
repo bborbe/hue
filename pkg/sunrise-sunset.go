@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Benjamin Borbe All rights reserved.
+// Copyright (c) 2026 Benjamin Borbe All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -38,7 +38,7 @@ func (s *sunriseSunsetProvider) GetSunriseSunset(
 	}
 	sunrise, sunset, err := p.GetSunriseSunset()
 	if err != nil {
-		return time.Time{}, time.Time{}, errors.Wrap(ctx, err, "get sunrise and sunset failed")
+		return time.Time{}, time.Time{}, errors.Wrap(ctx, err, "compute sunrise and sunset failed")
 	}
 	return sunrise, sunset, nil
 }
