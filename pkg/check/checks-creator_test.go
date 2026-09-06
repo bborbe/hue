@@ -38,10 +38,14 @@ var _ = Describe("CheckCreator", func() {
 	var (
 		ctx      context.Context
 		provider pkg.BridgesProvider
+		berlin   *stdtime.Location
 	)
 
 	BeforeEach(func() {
+		var err error
 		ctx = context.Background()
+		berlin, err = stdtime.LoadLocation("Europe/Berlin")
+		Expect(err).NotTo(HaveOccurred())
 		provider = pkg.BridgesProviderFunc(
 			func(_ context.Context) ([]*huego.Bridge, error) {
 				return []*huego.Bridge{nil}, nil
@@ -51,7 +55,13 @@ var _ = Describe("CheckCreator", func() {
 
 	DescribeTable("aquarium window",
 		func(summerMode bool) {
-			creator := check.NewCheckCreator(provider, summerMode, libtime.NewCurrentDateTime())
+			creator := check.NewCheckCreator(
+				provider,
+				summerMode,
+				libtime.NewCurrentDateTime(),
+				berlin,
+				pkg.NewSunriseSunsetProvider(),
+			)
 			checks, err := creator.CreateChecks(ctx)
 
 			Expect(err).NotTo(HaveOccurred())
@@ -87,7 +97,13 @@ var _ = Describe("CheckCreator schedule", func() {
 	DescribeTable("aquarium light at 21:00 Berlin",
 		func(summerMode bool, expected string) {
 			clock := fixedClock{t: stdtime.Date(2026, 6, 15, 21, 0, 0, 0, berlin)}
-			creator := check.NewCheckCreator(provider, summerMode, clock)
+			creator := check.NewCheckCreator(
+				provider,
+				summerMode,
+				clock,
+				berlin,
+				pkg.NewSunriseSunsetProvider(),
+			)
 
 			checks, err := creator.CreateChecks(ctx)
 			Expect(err).NotTo(HaveOccurred())
@@ -126,7 +142,13 @@ var _ = Describe("CheckCreator Jana Aqua Light window", func() {
 	DescribeTable("Jana Aqua Light window boundary",
 		func(hour, minute, second int, summerMode bool, expected string) {
 			clock := fixedClock{t: stdtime.Date(2026, 6, 15, hour, minute, second, 0, berlin)}
-			creator := check.NewCheckCreator(provider, summerMode, clock)
+			creator := check.NewCheckCreator(
+				provider,
+				summerMode,
+				clock,
+				berlin,
+				pkg.NewSunriseSunsetProvider(),
+			)
 
 			checks, err := creator.CreateChecks(ctx)
 			Expect(err).NotTo(HaveOccurred())
@@ -151,7 +173,13 @@ var _ = Describe("CheckCreator Jana Aqua Light window", func() {
 		// Summer mode: shared window runs 20-23, so at 22:45 Aquarium Licht is
 		// still on while Jana (12:30-22:30) is already off.
 		clock := fixedClock{t: stdtime.Date(2026, 6, 15, 22, 45, 0, 0, berlin)}
-		creator := check.NewCheckCreator(provider, true, clock)
+		creator := check.NewCheckCreator(
+			provider,
+			true,
+			clock,
+			berlin,
+			pkg.NewSunriseSunsetProvider(),
+		)
 		checks, err := creator.CreateChecks(ctx)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(checkNamed(checks, "Jana Aqua Light").Name()).To(ContainSubstring("is off"))
@@ -160,7 +188,13 @@ var _ = Describe("CheckCreator Jana Aqua Light window", func() {
 		// Winter mode: shared window runs 10-20, so at 21:00 Aquarium Licht is
 		// already off while Jana (12:30-22:30) is still on.
 		clock = fixedClock{t: stdtime.Date(2026, 6, 15, 21, 0, 0, 0, berlin)}
-		creator = check.NewCheckCreator(provider, false, clock)
+		creator = check.NewCheckCreator(
+			provider,
+			false,
+			clock,
+			berlin,
+			pkg.NewSunriseSunsetProvider(),
+		)
 		checks, err = creator.CreateChecks(ctx)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(checkNamed(checks, "Jana Aqua Light").Name()).To(ContainSubstring("is on"))

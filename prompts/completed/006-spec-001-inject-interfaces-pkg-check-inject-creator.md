@@ -1,8 +1,13 @@
 ---
-status: approved
+status: completed
 spec: [001-inject-interfaces-pkg-check]
+summary: Rewired NewCheckCreator to receive the pre-resolved Europe/Berlin *time.Location and pkg.SunriseSunsetProvider via its constructor, removing all direct time.LoadLocation and sunrisesunset library calls from pkg/check business logic; main.go now resolves the location once at the composition root and the factory/creator call sites were updated in the same change
+execution_id: hue-inject-interfaces-pkg-check-exec-006-spec-001-inject-interfaces-pkg-check-inject-creator
+dark-factory-version: dev
 created: "2026-09-06T12:00:00Z"
 queued: "2026-09-06T10:24:48Z"
+started: "2026-09-06T10:26:44Z"
+completed: "2026-09-06T10:29:20Z"
 ---
 
 # Inject sunrise capability + location into NewCheckCreator, strip pkg/check of direct calls
