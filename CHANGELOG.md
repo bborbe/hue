@@ -9,7 +9,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
-## Unreleased
+## v0.4.1
 
 - test: Add counterfeiter fakes for the `CheckCreator`, `ChecksRunner`, and `BridgesProvider` interfaces to `mocks/`, closing the interface-definition → test-coverage gap flagged by code review
 
