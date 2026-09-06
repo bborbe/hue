@@ -25,6 +25,8 @@ func CreateCheckController(
 	inverval time.Duration,
 	summerMode bool,
 	currentDateTimeGetter libtime.CurrentDateTimeGetter,
+	location *time.Location,
+	sunriseSunsetProvider pkg.SunriseSunsetProvider,
 ) run.Func {
 	return check.NewCheckCron(
 		check.NewCheckCreator(
@@ -35,8 +37,10 @@ func CreateCheckController(
 			),
 			summerMode,
 			currentDateTimeGetter,
+			location,
+			sunriseSunsetProvider,
 		),
-		check.NewChecksRunner(),
+		check.NewChecksRunner(currentDateTimeGetter),
 		inverval,
 	)
 }

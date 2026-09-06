@@ -11,7 +11,6 @@ import (
 	"github.com/bborbe/errors"
 	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
-	"github.com/kelvins/sunrisesunset"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -24,27 +23,27 @@ func NewCheckCreator(
 	provider pkg.BridgesProvider,
 	summerMode bool,
 	currentDateTimeGetter libtime.CurrentDateTimeGetter,
+	location *time.Location,
+	sunriseSunsetProvider pkg.SunriseSunsetProvider,
 ) CheckCreator {
 	return &checkCreator{
 		provider:              provider,
 		summerMode:            summerMode,
-		location:              "Europe/Berlin",
+		location:              location,
 		currentDateTimeGetter: currentDateTimeGetter,
+		sunriseSunsetProvider: sunriseSunsetProvider,
 	}
 }
 
 type checkCreator struct {
 	provider              pkg.BridgesProvider
 	summerMode            bool
-	location              string
+	location              *time.Location
 	currentDateTimeGetter libtime.CurrentDateTimeGetter
+	sunriseSunsetProvider pkg.SunriseSunsetProvider
 }
 
 func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
-	loc, err := time.LoadLocation(c.location)
-	if err != nil {
-		return nil, errors.Wrap(ctx, err, "load location failed")
-	}
 	bridges, err := c.provider.GetBridges(ctx)
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get bridge failed")
@@ -52,7 +51,8 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	bridge := bridges[0]
 
 	now := c.currentDateTimeGetter.Now().Time()
-	glog.V(2).Infof("current time %s in %s", now.In(loc).Format(time.RFC3339), loc.String())
+	glog.V(2).
+		Infof("current time %s in %s", now.In(c.location).Format(time.RFC3339), c.location.String())
 
 	var aquariumLightOnHour int
 	var aquariumLightOffhour int
@@ -69,29 +69,23 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	artemiaLightOnHour := 8
 	artemiaLightOffhour := 23
 
-	p := sunrisesunset.Parameters{
-		Latitude:  50.1,
-		Longitude: 8.1,
-		UtcOffset: 0,
-		Date:      now.UTC(),
-	}
-	sunrise, sunset, err := p.GetSunriseSunset()
+	sunrise, sunset, err := c.sunriseSunsetProvider.GetSunriseSunset(ctx, now)
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get sunrise and sunset failed")
 	}
 	glog.V(2).
-		Infof("now %s sunrise %s sunset %s", now.In(loc).Format("15:04:05"), sunrise.In(loc).Format("15:04:05"), sunset.In(loc).Format("15:04:05"))
+		Infof("now %s sunrise %s sunset %s", now.In(c.location).Format("15:04:05"), sunrise.In(c.location).Format("15:04:05"), sunset.In(c.location).Format("15:04:05"))
 
 	return Checks{
 		NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{
 				Hour:     artemiaLightOnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     artemiaLightOffhour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Artemia Licht"),
 			NewLightIsOff(bridge, "Artemia Licht"),
@@ -100,11 +94,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			now,
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOffhour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Aquarium Licht"),
 			NewLightIsOff(bridge, "Aquarium Licht"),
@@ -113,11 +107,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			now,
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOffhour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Aquarium Rack"),
 			NewLightIsOff(bridge, "Aquarium Rack"),
@@ -126,11 +120,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			now,
 			pkg.TimeOfDay{
 				Hour:     co2OnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     co2OffHour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Aquarium CO2"),
 			NewLightIsOff(bridge, "Aquarium CO2"),
@@ -139,11 +133,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			now,
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOffhour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Garnelen Licht 1"),
 			NewLightIsOff(bridge, "Garnelen Licht 1"),
@@ -152,11 +146,11 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			now,
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOnHour,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     aquariumLightOffhour,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Garnelen Licht 2"),
 			NewLightIsOff(bridge, "Garnelen Licht 2"),
@@ -173,12 +167,12 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 			pkg.TimeOfDay{
 				Hour:     12,
 				Minute:   30,
-				Location: loc,
+				Location: c.location,
 			},
 			pkg.TimeOfDay{
 				Hour:     22,
 				Minute:   30,
-				Location: loc,
+				Location: c.location,
 			},
 			NewLightIsOn(bridge, "Jana Aqua Light"),
 			NewLightIsOff(bridge, "Jana Aqua Light"),

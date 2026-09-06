@@ -7,6 +7,7 @@ package check
 import (
 	"context"
 
+	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
 )
 
@@ -14,11 +15,14 @@ type ChecksRunner interface {
 	RunChecks(ctx context.Context, checks Checks) error
 }
 
-func NewChecksRunner() ChecksRunner {
-	return &checksRunner{}
+func NewChecksRunner(currentDateTimeGetter libtime.CurrentDateTimeGetter) ChecksRunner {
+	return &checksRunner{
+		currentDateTimeGetter: currentDateTimeGetter,
+	}
 }
 
 type checksRunner struct {
+	currentDateTimeGetter libtime.CurrentDateTimeGetter
 }
 
 func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {

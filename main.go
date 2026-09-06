@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
 	"github.com/bborbe/log"
 	libmetrics "github.com/bborbe/metrics"
@@ -49,6 +50,10 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	// (see github.com/bborbe/metrics/metrics_build_info.go SetBuildInfo).
 	// Safe to call with a.BuildDate even when BUILD_DATE env is unset.
 	libmetrics.NewBuildInfoMetrics().SetBuildInfo(a.BuildGitVersion, a.BuildGitCommit, a.BuildDate)
+	location, err := time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		return errors.Wrap(ctx, err, "load location failed")
+	}
 	return service.Run(
 		ctx,
 		factory.CreateCheckController(
@@ -58,6 +63,8 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 			a.Inverval,
 			a.SummerMode,
 			libtime.NewCurrentDateTime(),
+			location,
+			pkg.NewSunriseSunsetProvider(),
 		),
 		a.createHttpServer(),
 	)
