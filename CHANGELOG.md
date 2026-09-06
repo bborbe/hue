@@ -9,6 +9,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- test: Add counterfeiter fakes for the `CheckCreator`, `ChecksRunner`, and `BridgesProvider` interfaces to `mocks/`, closing the interface-definition → test-coverage gap flagged by code review
+
 ## v0.4.0
 
 - feat: Add `SunriseSunsetProvider` interface + `NewSunriseSunsetProvider` concrete capability in `pkg/`, wrapping `kelvins/sunrisesunset` with the pre-refactor coordinates (lat 50.1, lon 8.1, UTC offset 0) for constructor injection into the checks layer

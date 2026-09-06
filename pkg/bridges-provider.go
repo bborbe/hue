@@ -12,6 +12,7 @@ import (
 	"github.com/golang/glog"
 )
 
+//counterfeiter:generate -o ../mocks/bridges-provider.go --fake-name BridgesProvider . BridgesProvider
 type BridgesProvider interface {
 	// GetBridges returns a bridge if found
 	GetBridges(ctx context.Context) ([]*huego.Bridge, error)

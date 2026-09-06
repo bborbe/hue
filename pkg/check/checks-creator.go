@@ -15,6 +15,7 @@ import (
 	"github.com/bborbe/hue/pkg"
 )
 
+//counterfeiter:generate -o ../../mocks/checks-creator.go --fake-name CheckCreator . CheckCreator
 type CheckCreator interface {
 	CreateChecks(ctx context.Context) (Checks, error)
 }
