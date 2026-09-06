@@ -1,8 +1,13 @@
 ---
-status: approved
+status: completed
 spec: [002-migrate-glog-slog]
+summary: Replaced the glog-typed /setloglevel setter with a validated slog LevelVar handler (0→Info, ≥1→Debug, invalid→400, 5-min auto-reset), installed default text-to-stderr slog handlers per binary (controller Debug for LOGLEVEL=2 parity, three CLIs Info), wired the factory, and removed the now-unused bborbe/log import from main.go
+execution_id: hue-migrate-glog-slog-exec-012-spec-002-logger-setup-setloglevel
+dark-factory-version: dev
 created: "2026-09-06T20:55:00Z"
 queued: "2026-09-06T19:18:14Z"
+started: "2026-09-06T19:20:51Z"
+completed: "2026-09-06T19:24:02Z"
 ---
 
 # Logger setup per binary + `/setloglevel` conversion to slog

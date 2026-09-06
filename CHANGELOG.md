@@ -14,6 +14,8 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - refactor: Migrate all hue Go code from the deprecated `github.com/golang/glog` logger to stdlib `log/slog` with explicit intent-based levels (Info for operator-facing output, Debug for state/heartbeat detail, Warn for failures) and structured key-value attributes
 - refactor: Remove the three unconditional per-cycle heartbeat log lines (checks-cron "all checks applied" / "sleep for", time-of-day "next trigger in")
 - fix: Stop logging the bridge `User` API key and the `%+v` whole-discovery dump; bridge-discovery lines now log count / ID / Host only
+- feat: Install a default text-to-stderr slog handler per binary — controller default level Debug (matches the LOGLEVEL=2 deployment), the list-lights / turnon-light / turnoff-light CLIs default Info
+- refactor: Convert the /setloglevel/{level} endpoint from the glog-typed log.NewSetLoglevelHandler to a validated slog LevelVar setter (0 → Info, ≥1 → Debug, invalid input → 400, 5-minute auto-reset)
 
 ## v0.4.2
 

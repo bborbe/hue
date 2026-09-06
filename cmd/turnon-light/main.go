@@ -32,6 +32,9 @@ type application struct {
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	slog.SetDefault(
+		slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo})),
+	)
 	bridgeProvider := factory.CreateBridgesProvider(a.Url, a.ID, pkg.Token(a.Token))
 	bridges, err := bridgeProvider.GetBridges(ctx)
 	if err != nil {

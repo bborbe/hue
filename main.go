@@ -12,7 +12,6 @@ import (
 
 	"github.com/bborbe/errors"
 	libhttp "github.com/bborbe/http"
-	"github.com/bborbe/log"
 	libmetrics "github.com/bborbe/metrics"
 	"github.com/bborbe/run"
 	libsentry "github.com/bborbe/sentry"
@@ -45,6 +44,11 @@ type application struct {
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	var logLevel slog.LevelVar
+	logLevel.Set(slog.LevelDebug)
+	slog.SetDefault(
+		slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: &logLevel})),
+	)
 	// SetBuildInfo is nil-safe: libmetrics.NewBuildInfoMetrics().SetBuildInfo
 	// guards `buildDate == nil` and returns early without touching the gauge
 	// (see github.com/bborbe/metrics/metrics_build_info.go SetBuildInfo).
@@ -66,11 +70,11 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 			location,
 			pkg.NewSunriseSunsetProvider(),
 		),
-		a.createHttpServer(),
+		a.createHttpServer(&logLevel),
 	)
 }
 
-func (a *application) createHttpServer() run.Func {
+func (a *application) createHttpServer(logLevel *slog.LevelVar) run.Func {
 	return func(ctx context.Context) error {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
@@ -81,8 +85,7 @@ func (a *application) createHttpServer() run.Func {
 		router.Path("/healthz").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/readiness").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/metrics").Handler(promhttp.Handler())
-		router.Path("/setloglevel/{level}").
-			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
+		router.Path("/setloglevel/{level}").Handler(factory.CreateSetLogLevelHandler(logLevel))
 		router.Path("/gc").Handler(libhttp.NewGarbageCollectorHandler())
 		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
 		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))

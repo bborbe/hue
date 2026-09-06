@@ -5,6 +5,7 @@
 package factory
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -68,4 +69,11 @@ func CreateListLightsHandler(bridgesProvider pkg.BridgesProvider) http.Handler {
 // libhttp error handler so it can be mounted on a mux.Router.
 func CreateStatusHandler(bridgesProvider pkg.BridgesProvider) http.Handler {
 	return libhttp.NewErrorHandler(handler.NewStatusHandler(bridgesProvider))
+}
+
+// CreateSetLogLevelHandler wraps handler.NewSetLogLevelHandler with the
+// controller's default level (Debug, matching the LOGLEVEL=2 deployment) and
+// the 5-minute auto-reset so it can be mounted on a mux.Router.
+func CreateSetLogLevelHandler(levelVar *slog.LevelVar) http.Handler {
+	return handler.NewSetLogLevelHandler(levelVar, slog.LevelDebug, 5*time.Minute)
 }
