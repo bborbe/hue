@@ -145,3 +145,16 @@ Rationale: prompt 1 establishes the capability contract first; prompt 2 rewires 
 ## Do-Nothing Option
 
 `pkg/check` keeps the direct `sunrisesunset` and `time.LoadLocation` calls: the `no-package-function-calls-in-business-logic` finding stays red, the light-flip schedule stays verifiable only by live observation, and every future schedule change carries unnoticed-drift risk. The refactor is already split and PR 1 is the agreed first step; skipping it leaves the parent checklist open and blocks PRs 2-4 that build on the injected interfaces.
+
+## Verification Result
+
+Verified 2026-09-06 by the dark-factory spec-verifier (branch feature/inject-interfaces-pkg-check, HEAD 0630a50):
+
+- **AC 1-3 (zero direct calls in pkg/check):** PASS — `grep -rn "time.Now()" pkg/check/` → 0; `sunrisesunset` non-test → 0; `LoadLocation` non-test → 0.
+- **AC 4 (constructor DI wired):** PASS — `checks-runner.go` takes `libtime.CurrentDateTimeGetter`; factory `currentDateTimeGetter` count = 3; `main.go` constructs `libtime.NewCurrentDateTime()` once, `time.LoadLocation("Europe/Berlin")` once, `pkg.NewSunriseSunsetProvider()` once.
+- **AC 5 (in-repo parity test):** PASS — `pkg/check/checks-parity_test.go` asserts `Expect(injected).To(Equal(reference))` at 4 entries (2 instants × both summerMode); `make test` exit 0.
+- **AC 6 (code-review gate):** PASS — ast-grep `go-time/no-time-now-direct` = 0; `go-composition/no-package-function-calls-in-business-logic` = 0 genuine (glog deferred to PR 3); `/coding:pr-review` loop clean.
+- **AC 7 (make precommit):** PASS — exit 0.
+- **AC 8 (Post-Deploy Rung-3 live parity):** PASS — pre-merge capture `/tmp/pre-merge.schedule` vs post-merge master capture `/tmp/post-merge.schedule` (both 2026-09-06, same UTC date): `diff` EMPTY — byte-for-byte identical (9 check states + `all checks applied` + `now <TIME> sunrise 06:49:47 sunset 20:01:11`). Pod `Running 1/1` on `:master` (hue-5f8b87c49-rcgwr), no panic / repeated errors.
+
+Merged via PR #20 (bborbe/hue), merge commit 8504ec0, released v0.4.0.
