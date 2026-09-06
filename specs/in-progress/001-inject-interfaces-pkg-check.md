@@ -45,8 +45,8 @@ After this work, `pkg/check` business logic contains zero direct clock calls and
 - [ ] In-repo parity test proves the schedule is byte-for-byte identical before/after — evidence: `pkg/check/` contains a parity test that renders the 9-check schedule (each check's name and on/off state at the instant, plus sunrise and sunset times) through the pre-refactor reference computation and through the injected path at ≥2 fixed instants (one summer-date, one winter-date, both `summerMode` values) and asserts byte equality; `grep -rn "sunrisesunset" pkg/check/ --include='*_test.go'` returns ≥1 line (the parity test's independent reference computation); `make test` exits 0.
 - [ ] Code-review gate: mechanical ast-grep run plus LLM adjudication on the changed `pkg/check` files reports zero genuine findings for `go-time/no-time-now-direct` and `go-composition/no-package-function-calls-in-business-logic` (the only mechanically-flagged calls remaining are `errors.Wrap` — the mandated wrapping lib — and same-package constructors; glog is PR 3) — evidence: `bash ~/.claude/plugins/marketplaces/coding/scripts/ast-grep-runner.sh /Users/bborbe/Documents/workspaces/hue-inject-interfaces-pkg-check/pkg/check` JSON shows both rule ids at 0 genuine findings; `/coding:code-review` output confirms.
 - [ ] `make precommit` exits 0 — evidence: exit code.
-- [ ] **Post-Deploy (Rung-3):** live parity — the post-merge master cron-tick capture shows byte-for-byte identical schedule lines (the sunrise/sunset line plus the per-check satisfied/apply lines, after stripping glog headers and normalizing the per-cycle `now` field) against the pre-merge feature-branch capture taken on the same UTC date at the same time-of-day; `kubectlquant -n hue get pods -l app=hue` shows `Running 1/1` and logs show no panic / repeated error pattern.
-  - `deploy_check:` `kubectlquant -n hue get deploy/hue -o jsonpath='{.spec.template.spec.containers[0].image}' | awk -F: '{print $NF}'`
+- [ ] **Post-Deploy (Rung-3):** live parity — the post-merge master cron-tick capture shows byte-for-byte identical schedule lines (the sunrise/sunset line plus the per-check satisfied/apply lines, after stripping glog headers and normalizing the per-cycle `now` field) against the pre-merge feature-branch capture taken on the same UTC date at the same time-of-day; `kubectlnukeprod -n hue get pods -l app=hue` shows `Running 1/1` and logs show no panic / repeated error pattern. (Note: hue runs on nuke-prod, not quant — migrated 2026-08-21 `a862f4a`.)
+  - `deploy_check:` `kubectlnukeprod -n hue get deploy/hue -o jsonpath='{.spec.template.spec.containers[0].image}' | awk -F: '{print $NF}'`
   - `deploy_target:` `master`
 
 ## Verification
@@ -74,14 +74,14 @@ grep -rni "sunrisesunset" main.go pkg/factory/                                  
 bash ~/.claude/plugins/marketplaces/coding/scripts/ast-grep-runner.sh /Users/bborbe/Documents/workspaces/hue-inject-interfaces-pkg-check/pkg/check   # both rules: 0 genuine findings
 /coding:code-review on pkg/check                                                            # both rules at zero
 
-# pre-merge capture (feature branch deployed to quant)
-kubectlquant -n hue get pods -l app=hue                                                     # Running 1/1
-kubectlquant -n hue logs -l app=hue --tail=500 --since=3m > /tmp/pre-merge.raw
+# pre-merge capture (feature branch deployed to nuke-prod)
+kubectlnukeprod -n hue get pods -l app=hue                                                   # Running 1/1
+kubectlnukeprod -n hue logs -l app=hue --tail=500 --since=3m > /tmp/pre-merge.raw
 # extract one full 60s cycle's schedule lines (strip glog header prefix; drop `current time` and `sleep for` lines):
 grep -E "sunrise|satisfied|applied" /tmp/pre-merge.raw | sed -E 's/^[IWEF][0-9]{4} [0-9:.]+ +[0-9]+ [^]]+\] //; s/now [0-9]{2}:[0-9]{2}:[0-9]{2}/now <TIME>/' | sort -u > /tmp/pre-merge.schedule
 
 # post-merge capture (master deployed, SAME UTC date, same time-of-day)
-kubectlquant -n hue logs -l app=hue --tail=500 --since=3m > /tmp/post-merge.raw
+kubectlnukeprod -n hue logs -l app=hue --tail=500 --since=3m > /tmp/post-merge.raw
 grep -E "sunrise|satisfied|applied" /tmp/post-merge.raw | sed -E 's/^[IWEF][0-9]{4} [0-9:.]+ +[0-9]+ [^]]+\] //; s/now [0-9]{2}:[0-9]{2}:[0-9]{2}/now <TIME>/' | sort -u > /tmp/post-merge.schedule
 
 diff /tmp/pre-merge.schedule /tmp/post-merge.schedule                                      # empty
