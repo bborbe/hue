@@ -1,5 +1,5 @@
 ---
-status: verifying
+status: completed
 tags:
     - dark-factory
     - spec
@@ -7,6 +7,7 @@ approved: "2026-09-06T10:10:27Z"
 generating: "2026-09-06T10:21:24Z"
 prompted: "2026-09-06T10:21:24Z"
 verifying: "2026-09-06T10:32:21Z"
+completed: "2026-09-06T11:10:59Z"
 branch: dark-factory/inject-interfaces-pkg-check
 ---
 
