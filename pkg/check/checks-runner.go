@@ -6,9 +6,9 @@ package check
 
 import (
 	"context"
+	"log/slog"
 
 	libtime "github.com/bborbe/time"
-	"github.com/golang/glog"
 )
 
 //counterfeiter:generate -o ../../mocks/checks-runner.go --fake-name ChecksRunner . ChecksRunner
@@ -37,14 +37,14 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {
 				return err
 			}
 			if satisfied {
-				glog.V(2).Infof("%s is satisfied => skip", check.Name())
+				slog.Debug("check satisfied, skip", "check", check.Name())
 				continue
 			}
-			glog.V(2).Infof("%s is not satisfied => apply", check.Name())
+			slog.Debug("check not satisfied, apply", "check", check.Name())
 			if err := check.Apply(ctx); err != nil {
 				return err
 			}
-			glog.V(2).Infof("%s applied", check.Name())
+			slog.Debug("check applied", "check", check.Name())
 		}
 	}
 	return nil

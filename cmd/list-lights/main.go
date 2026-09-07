@@ -6,13 +6,15 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/bborbe/errors"
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
-	"github.com/golang/glog"
 
 	"github.com/bborbe/hue/pkg"
 	"github.com/bborbe/hue/pkg/factory"
@@ -32,6 +34,9 @@ type application struct {
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	slog.SetDefault(
+		slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo})),
+	)
 	bridgeProvider := factory.CreateBridgesProvider(a.Url, a.ID, pkg.Token(a.Token))
 	bridges, err := bridgeProvider.GetBridges(ctx)
 	if err != nil {
@@ -47,9 +52,11 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	lights := pkg.Lights(hueLights)
 	sort.Sort(lights)
 
-	glog.Infof("found %d lights", len(lights))
+	slog.Info("found lights", "count", len(lights))
+	var listing strings.Builder
 	for _, light := range lights {
-		glog.Infof("'%s' on: %v", light.Name, light.IsOn())
+		fmt.Fprintf(&listing, "'%s' on: %v\n", light.Name, light.IsOn())
 	}
+	slog.Info("lights listing", "listing", listing.String())
 	return nil
 }

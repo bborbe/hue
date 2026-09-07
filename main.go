@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"time"
 
@@ -17,7 +18,6 @@ import (
 	libsentry "github.com/bborbe/sentry"
 	"github.com/bborbe/service"
 	libtime "github.com/bborbe/time"
-	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -45,6 +45,11 @@ type application struct {
 }
 
 func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) error {
+	var logLevel slog.LevelVar
+	logLevel.Set(slog.LevelDebug)
+	slog.SetDefault(
+		slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: &logLevel})),
+	)
 	// SetBuildInfo is nil-safe: libmetrics.NewBuildInfoMetrics().SetBuildInfo
 	// guards `buildDate == nil` and returns early without touching the gauge
 	// (see github.com/bborbe/metrics/metrics_build_info.go SetBuildInfo).
@@ -54,6 +59,9 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 	if err != nil {
 		return errors.Wrap(ctx, err, "load location failed")
 	}
+	samplerFactory := log.SamplerFactoryFunc(func() log.Sampler {
+		return log.NewSampleTime(10 * time.Minute)
+	})
 	return service.Run(
 		ctx,
 		factory.CreateCheckController(
@@ -65,12 +73,13 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 			libtime.NewCurrentDateTime(),
 			location,
 			pkg.NewSunriseSunsetProvider(),
+			samplerFactory,
 		),
-		a.createHttpServer(),
+		a.createHttpServer(&logLevel),
 	)
 }
 
-func (a *application) createHttpServer() run.Func {
+func (a *application) createHttpServer(logLevel *slog.LevelVar) run.Func {
 	return func(ctx context.Context) error {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
@@ -81,13 +90,12 @@ func (a *application) createHttpServer() run.Func {
 		router.Path("/healthz").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/readiness").Handler(libhttp.NewPrintHandler("OK"))
 		router.Path("/metrics").Handler(promhttp.Handler())
-		router.Path("/setloglevel/{level}").
-			Handler(log.NewSetLoglevelHandler(ctx, log.NewLogLevelSetter(2, 5*time.Minute)))
+		router.Path("/setloglevel/{level}").Handler(factory.CreateSetLogLevelHandler(logLevel))
 		router.Path("/gc").Handler(libhttp.NewGarbageCollectorHandler())
 		router.Path("/lights").Handler(factory.CreateListLightsHandler(bridgesProvider))
 		router.Path("/status").Handler(factory.CreateStatusHandler(bridgesProvider))
 
-		glog.V(2).Infof("starting http server listen on %s", a.Listen)
+		slog.Info("starting http server", "listen", a.Listen)
 		return libhttp.NewServer(
 			a.Listen,
 			router,

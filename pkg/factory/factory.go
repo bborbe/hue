@@ -5,11 +5,13 @@
 package factory
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/amimof/huego"
 	libhttp "github.com/bborbe/http"
+	"github.com/bborbe/log"
 	"github.com/bborbe/run"
 	libtime "github.com/bborbe/time"
 
@@ -18,6 +20,8 @@ import (
 	"github.com/bborbe/hue/pkg/handler"
 )
 
+// CreateCheckController wires the check controller, threading the sampler
+// factory through to the checks cron so its failure warning is sampled.
 func CreateCheckController(
 	url string,
 	id string,
@@ -27,6 +31,7 @@ func CreateCheckController(
 	currentDateTimeGetter libtime.CurrentDateTimeGetter,
 	location *time.Location,
 	sunriseSunsetProvider pkg.SunriseSunsetProvider,
+	samplerFactory log.SamplerFactory,
 ) run.Func {
 	return check.NewCheckCron(
 		check.NewCheckCreator(
@@ -42,6 +47,7 @@ func CreateCheckController(
 		),
 		check.NewChecksRunner(currentDateTimeGetter),
 		inverval,
+		samplerFactory,
 	)
 }
 
@@ -68,4 +74,11 @@ func CreateListLightsHandler(bridgesProvider pkg.BridgesProvider) http.Handler {
 // libhttp error handler so it can be mounted on a mux.Router.
 func CreateStatusHandler(bridgesProvider pkg.BridgesProvider) http.Handler {
 	return libhttp.NewErrorHandler(handler.NewStatusHandler(bridgesProvider))
+}
+
+// CreateSetLogLevelHandler wraps handler.NewSetLogLevelHandler with the
+// controller's default level (Debug, matching the LOGLEVEL=2 deployment) and
+// the 5-minute auto-reset so it can be mounted on a mux.Router.
+func CreateSetLogLevelHandler(levelVar *slog.LevelVar) http.Handler {
+	return handler.NewSetLogLevelHandler(levelVar, slog.LevelDebug, 5*time.Minute)
 }
