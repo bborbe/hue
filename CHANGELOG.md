@@ -9,7 +9,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
-## Unreleased
+## v0.5.0
 
 - refactor: Migrate all hue Go code from the deprecated `github.com/golang/glog` logger to stdlib `log/slog` with explicit intent-based levels (Info for operator-facing output, Debug for state/heartbeat detail, Warn for failures) and structured key-value attributes
 - refactor: Remove the three unconditional per-cycle heartbeat log lines (checks-cron "all checks applied" / "sleep for", time-of-day "next trigger in")
