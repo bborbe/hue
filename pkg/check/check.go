@@ -6,7 +6,7 @@ package check
 
 import "context"
 
-type Checks []Check
+type CheckList []Check
 
 //counterfeiter:generate -o ../../mocks/check.go --fake-name Check . Check
 

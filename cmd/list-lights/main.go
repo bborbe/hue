@@ -44,7 +44,7 @@ func (a *application) Run(ctx context.Context, sentryClient libsentry.Client) er
 		return errors.Wrap(ctx, err, "get lights failed")
 	}
 
-	lights := pkg.Lights(hueLights)
+	lights := pkg.LightList(hueLights)
 	sort.Sort(lights)
 
 	glog.Infof("found %d lights", len(lights))

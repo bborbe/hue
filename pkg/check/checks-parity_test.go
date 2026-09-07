@@ -25,7 +25,7 @@ import (
 func renderSchedule(
 	loc *stdtime.Location,
 	sunrise, sunset stdtime.Time,
-	checks check.Checks,
+	checks check.CheckList,
 ) string {
 	var sb strings.Builder
 	fmt.Fprintf(
@@ -72,7 +72,7 @@ func referenceSchedule(now stdtime.Time, summerMode bool) string {
 	co2OnHour := aquariumLightOnHour - 2
 	co2OffHour := aquariumLightOffhour - 2
 
-	checks := check.Checks{
+	checks := check.CheckList{
 		check.NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{Hour: 8, Location: loc},

@@ -13,7 +13,7 @@ import (
 
 //counterfeiter:generate -o ../../mocks/checks-runner.go --fake-name ChecksRunner . ChecksRunner
 type ChecksRunner interface {
-	RunChecks(ctx context.Context, checks Checks) error
+	RunChecks(ctx context.Context, checks CheckList) error
 }
 
 func NewChecksRunner(currentDateTimeGetter libtime.CurrentDateTimeGetter) ChecksRunner {
@@ -26,7 +26,7 @@ type checksRunner struct {
 	currentDateTimeGetter libtime.CurrentDateTimeGetter
 }
 
-func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {
+func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
 	for _, check := range checks {
 		select {
 		case <-ctx.Done():

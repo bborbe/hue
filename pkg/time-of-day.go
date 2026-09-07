@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bborbe/errors"
+	"github.com/bborbe/validation"
 )
 
 type TimeOfDay struct {
@@ -20,10 +20,9 @@ type TimeOfDay struct {
 }
 
 func (t TimeOfDay) Validate(ctx context.Context) error {
-	if t.Location == nil {
-		return errors.New(ctx, "location missing")
-	}
-	return nil
+	return validation.All{
+		validation.Name("location", validation.NotNil(t.Location)),
+	}.Validate(ctx)
 }
 
 func (t TimeOfDay) String() string {

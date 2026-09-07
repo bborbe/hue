@@ -32,16 +32,16 @@ func LightByName(ctx context.Context, bridge *huego.Bridge, name LightName) (*hu
 	return nil, errors.Errorf(ctx, "no light with name '%s' found", name)
 }
 
-type Lights []huego.Light
+type LightList []huego.Light
 
-func (l Lights) Len() int {
+func (l LightList) Len() int {
 	return len(l)
 }
 
-func (l Lights) Swap(i, j int) {
+func (l LightList) Swap(i, j int) {
 	l[i], l[j] = l[j], l[i]
 }
 
-func (l Lights) Less(i, j int) bool {
+func (l LightList) Less(i, j int) bool {
 	return strings.Compare(strings.ToLower(l[i].Name), strings.ToLower(l[j].Name)) < 1
 }

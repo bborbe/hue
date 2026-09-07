@@ -25,7 +25,7 @@ type fixedClock struct{ t stdtime.Time }
 func (f fixedClock) Now() libtime.DateTime { return libtime.DateTime(f.t) }
 
 // checkNamed returns the check whose Name contains substr.
-func checkNamed(checks check.Checks, substr string) check.Check {
+func checkNamed(checks check.CheckList, substr string) check.Check {
 	for _, c := range checks {
 		if strings.Contains(c.Name(), substr) {
 			return c

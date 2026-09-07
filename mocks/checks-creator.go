@@ -9,24 +9,24 @@ import (
 )
 
 type CheckCreator struct {
-	CreateChecksStub        func(context.Context) (check.Checks, error)
+	CreateChecksStub        func(context.Context) (check.CheckList, error)
 	createChecksMutex       sync.RWMutex
 	createChecksArgsForCall []struct {
 		arg1 context.Context
 	}
 	createChecksReturns struct {
-		result1 check.Checks
+		result1 check.CheckList
 		result2 error
 	}
 	createChecksReturnsOnCall map[int]struct {
-		result1 check.Checks
+		result1 check.CheckList
 		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *CheckCreator) CreateChecks(arg1 context.Context) (check.Checks, error) {
+func (fake *CheckCreator) CreateChecks(arg1 context.Context) (check.CheckList, error) {
 	fake.createChecksMutex.Lock()
 	ret, specificReturn := fake.createChecksReturnsOnCall[len(fake.createChecksArgsForCall)]
 	fake.createChecksArgsForCall = append(fake.createChecksArgsForCall, struct {
@@ -51,7 +51,7 @@ func (fake *CheckCreator) CreateChecksCallCount() int {
 	return len(fake.createChecksArgsForCall)
 }
 
-func (fake *CheckCreator) CreateChecksCalls(stub func(context.Context) (check.Checks, error)) {
+func (fake *CheckCreator) CreateChecksCalls(stub func(context.Context) (check.CheckList, error)) {
 	fake.createChecksMutex.Lock()
 	defer fake.createChecksMutex.Unlock()
 	fake.CreateChecksStub = stub
@@ -64,28 +64,28 @@ func (fake *CheckCreator) CreateChecksArgsForCall(i int) context.Context {
 	return argsForCall.arg1
 }
 
-func (fake *CheckCreator) CreateChecksReturns(result1 check.Checks, result2 error) {
+func (fake *CheckCreator) CreateChecksReturns(result1 check.CheckList, result2 error) {
 	fake.createChecksMutex.Lock()
 	defer fake.createChecksMutex.Unlock()
 	fake.CreateChecksStub = nil
 	fake.createChecksReturns = struct {
-		result1 check.Checks
+		result1 check.CheckList
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *CheckCreator) CreateChecksReturnsOnCall(i int, result1 check.Checks, result2 error) {
+func (fake *CheckCreator) CreateChecksReturnsOnCall(i int, result1 check.CheckList, result2 error) {
 	fake.createChecksMutex.Lock()
 	defer fake.createChecksMutex.Unlock()
 	fake.CreateChecksStub = nil
 	if fake.createChecksReturnsOnCall == nil {
 		fake.createChecksReturnsOnCall = make(map[int]struct {
-			result1 check.Checks
+			result1 check.CheckList
 			result2 error
 		})
 	}
 	fake.createChecksReturnsOnCall[i] = struct {
-		result1 check.Checks
+		result1 check.CheckList
 		result2 error
 	}{result1, result2}
 }

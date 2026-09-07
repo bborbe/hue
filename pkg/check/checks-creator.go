@@ -17,7 +17,7 @@ import (
 
 //counterfeiter:generate -o ../../mocks/checks-creator.go --fake-name CheckCreator . CheckCreator
 type CheckCreator interface {
-	CreateChecks(ctx context.Context) (Checks, error)
+	CreateChecks(ctx context.Context) (CheckList, error)
 }
 
 func NewCheckCreator(
@@ -44,7 +44,7 @@ type checkCreator struct {
 	sunriseSunsetProvider pkg.SunriseSunsetProvider
 }
 
-func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
+func (c *checkCreator) CreateChecks(ctx context.Context) (CheckList, error) {
 	bridges, err := c.provider.GetBridges(ctx)
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get bridge failed")
@@ -77,7 +77,7 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (Checks, error) {
 	glog.V(2).
 		Infof("now %s sunrise %s sunset %s", now.In(c.location).Format("15:04:05"), sunrise.In(c.location).Format("15:04:05"), sunset.In(c.location).Format("15:04:05"))
 
-	return Checks{
+	return CheckList{
 		NewBetweenTimeSwitch(
 			now,
 			pkg.TimeOfDay{

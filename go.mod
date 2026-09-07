@@ -12,6 +12,7 @@ require (
 	github.com/bborbe/sentry v1.10.0
 	github.com/bborbe/service v1.10.10
 	github.com/bborbe/time v1.27.11
+	github.com/bborbe/validation v1.4.23
 	github.com/golang/glog v1.2.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
@@ -27,7 +28,6 @@ require (
 	github.com/bborbe/kv v1.21.12 // indirect
 	github.com/bborbe/math v1.4.8 // indirect
 	github.com/bborbe/parse v1.11.0 // indirect
-	github.com/bborbe/validation v1.4.23 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/getsentry/sentry-go v0.49.0 // indirect
