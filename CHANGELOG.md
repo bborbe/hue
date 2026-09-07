@@ -19,6 +19,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 - refactor: Gate the checks-cron failure warning behind a github.com/bborbe/log time sampler (at most once per 10 minutes), threaded through the factory from main.go; tests use DefaultSamplerFactory
 - refactor: Aggregate the list-lights per-light detail into a single post-loop emission instead of one log call per light
 
+## v0.4.3
+
+- chore: update Go to 1.27.1
+
 ## v0.4.2
 
 - chore: Pin every counterfeiter `//go:generate` directive to `v6.12.2` in the five `*_suite_test.go` files, matching `tools.env`'s `COUNTERFEITER_VERSION`
