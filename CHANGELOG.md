@@ -13,6 +13,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - refactor: Rename the light-slice sort adapter `pkg.Lights` → `pkg.LightList` and the check aggregator `check.Checks` → `check.CheckList` per the `list-type-name` convention (call-sites, tests, and counterfeiter mocks updated); swap `pkg.TimeOfDay.Validate` to `github.com/bborbe/validation` (`validation.All`/`Name`/`NotNil`) with added contract tests
 
+## v0.4.3
+
+- chore: update Go to 1.27.1
+
 ## v0.4.2
 
 - chore: Pin every counterfeiter `//go:generate` directive to `v6.12.2` in the five `*_suite_test.go` files, matching `tools.env`'s `COUNTERFEITER_VERSION`
