@@ -9,6 +9,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- chore: update Go to 1.27.1
+
 ## v0.4.2
 
 - chore: Pin every counterfeiter `//go:generate` directive to `v6.12.2` in the five `*_suite_test.go` files, matching `tools.env`'s `COUNTERFEITER_VERSION`
