@@ -7,6 +7,7 @@ package check
 import (
 	"context"
 
+	"github.com/bborbe/errors"
 	libtime "github.com/bborbe/time"
 	"github.com/golang/glog"
 )
@@ -34,7 +35,7 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
 		default:
 			satisfied, err := check.Satisfied(ctx)
 			if err != nil {
-				return err
+				return errors.Wrapf(ctx, err, "check %s satisfied failed", check.Name())
 			}
 			if satisfied {
 				glog.V(2).Infof("%s is satisfied => skip", check.Name())
@@ -42,7 +43,7 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
 			}
 			glog.V(2).Infof("%s is not satisfied => apply", check.Name())
 			if err := check.Apply(ctx); err != nil {
-				return err
+				return errors.Wrapf(ctx, err, "check %s apply failed", check.Name())
 			}
 			glog.V(2).Infof("%s applied", check.Name())
 		}
