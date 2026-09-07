@@ -6,11 +6,11 @@ package check
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/bborbe/errors"
 	libtime "github.com/bborbe/time"
-	"github.com/golang/glog"
 
 	"github.com/bborbe/hue/pkg"
 )
@@ -52,8 +52,13 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (CheckList, error) {
 	bridge := bridges[0]
 
 	now := c.currentDateTimeGetter.Now().Time()
-	glog.V(2).
-		Infof("current time %s in %s", now.In(c.location).Format(time.RFC3339), c.location.String())
+	slog.Debug(
+		"current time",
+		"time",
+		now.In(c.location).Format(time.RFC3339),
+		"location",
+		c.location.String(),
+	)
 
 	var aquariumLightOnHour int
 	var aquariumLightOffhour int
@@ -74,8 +79,15 @@ func (c *checkCreator) CreateChecks(ctx context.Context) (CheckList, error) {
 	if err != nil {
 		return nil, errors.Wrap(ctx, err, "get sunrise and sunset failed")
 	}
-	glog.V(2).
-		Infof("now %s sunrise %s sunset %s", now.In(c.location).Format("15:04:05"), sunrise.In(c.location).Format("15:04:05"), sunset.In(c.location).Format("15:04:05"))
+	slog.Debug(
+		"sunrise sunset",
+		"now",
+		now.In(c.location).Format("15:04:05"),
+		"sunrise",
+		sunrise.In(c.location).Format("15:04:05"),
+		"sunset",
+		sunset.In(c.location).Format("15:04:05"),
+	)
 
 	return CheckList{
 		NewBetweenTimeSwitch(

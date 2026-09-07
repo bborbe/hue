@@ -13,6 +13,16 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - refactor: Rename the light-slice sort adapter `pkg.Lights` → `pkg.LightList` and the check aggregator `check.Checks` → `check.CheckList` per the `list-type-name` convention (call-sites, tests, and counterfeiter mocks updated); swap `pkg.TimeOfDay.Validate` to `github.com/bborbe/validation` (`validation.All`/`Name`/`NotNil`) with added contract tests
 
+## v0.5.0
+
+- refactor: Migrate all hue Go code from the deprecated `github.com/golang/glog` logger to stdlib `log/slog` with explicit intent-based levels (Info for operator-facing output, Debug for state/heartbeat detail, Warn for failures) and structured key-value attributes
+- refactor: Remove the three unconditional per-cycle heartbeat log lines (checks-cron "all checks applied" / "sleep for", time-of-day "next trigger in")
+- fix: Stop logging the bridge `User` API key and the `%+v` whole-discovery dump; bridge-discovery lines now log count / ID / Host only
+- feat: Install a default text-to-stderr slog handler per binary — controller default level Debug (matches the LOGLEVEL=2 deployment), the list-lights / turnon-light / turnoff-light CLIs default Info
+- refactor: Convert the /setloglevel/{level} endpoint from the glog-typed log.NewSetLoglevelHandler to a validated slog LevelVar setter (0 → Info, ≥1 → Debug, invalid input → 400, 5-minute auto-reset)
+- refactor: Gate the checks-cron failure warning behind a github.com/bborbe/log time sampler (at most once per 10 minutes), threaded through the factory from main.go; tests use DefaultSamplerFactory
+- refactor: Aggregate the list-lights per-light detail into a single post-loop emission instead of one log call per light
+
 ## v0.4.4
 
 - chore: update github.com/bborbe/errors to v1.6.1, github.com/bborbe/http to v1.26.26, github.com/bborbe/metrics to v0.6.3, github.com/bborbe/sentry to v1.10.1, github.com/bborbe/service to v1.10.13, github.com/bborbe/time to v1.27.14
