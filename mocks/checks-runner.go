@@ -9,11 +9,11 @@ import (
 )
 
 type ChecksRunner struct {
-	RunChecksStub        func(context.Context, check.Checks) error
+	RunChecksStub        func(context.Context, check.CheckList) error
 	runChecksMutex       sync.RWMutex
 	runChecksArgsForCall []struct {
 		arg1 context.Context
-		arg2 check.Checks
+		arg2 check.CheckList
 	}
 	runChecksReturns struct {
 		result1 error
@@ -25,12 +25,12 @@ type ChecksRunner struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *ChecksRunner) RunChecks(arg1 context.Context, arg2 check.Checks) error {
+func (fake *ChecksRunner) RunChecks(arg1 context.Context, arg2 check.CheckList) error {
 	fake.runChecksMutex.Lock()
 	ret, specificReturn := fake.runChecksReturnsOnCall[len(fake.runChecksArgsForCall)]
 	fake.runChecksArgsForCall = append(fake.runChecksArgsForCall, struct {
 		arg1 context.Context
-		arg2 check.Checks
+		arg2 check.CheckList
 	}{arg1, arg2})
 	stub := fake.RunChecksStub
 	fakeReturns := fake.runChecksReturns
@@ -51,13 +51,13 @@ func (fake *ChecksRunner) RunChecksCallCount() int {
 	return len(fake.runChecksArgsForCall)
 }
 
-func (fake *ChecksRunner) RunChecksCalls(stub func(context.Context, check.Checks) error) {
+func (fake *ChecksRunner) RunChecksCalls(stub func(context.Context, check.CheckList) error) {
 	fake.runChecksMutex.Lock()
 	defer fake.runChecksMutex.Unlock()
 	fake.RunChecksStub = stub
 }
 
-func (fake *ChecksRunner) RunChecksArgsForCall(i int) (context.Context, check.Checks) {
+func (fake *ChecksRunner) RunChecksArgsForCall(i int) (context.Context, check.CheckList) {
 	fake.runChecksMutex.RLock()
 	defer fake.runChecksMutex.RUnlock()
 	argsForCall := fake.runChecksArgsForCall[i]

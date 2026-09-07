@@ -5,6 +5,7 @@
 package pkg_test
 
 import (
+	"context"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -56,5 +57,13 @@ var _ = Describe("Hue Turn On Light", func() {
 			Second:   3,
 			Location: time.UTC,
 		}.String()).To(Equal("01:02:03"))
+	})
+	It("fails validation on nil location", func() {
+		Expect(pkg.TimeOfDay{}.Validate(context.Background())).To(HaveOccurred())
+	})
+	It("passes validation with a location", func() {
+		Expect(
+			pkg.TimeOfDay{Location: time.UTC}.Validate(context.Background()),
+		).NotTo(HaveOccurred())
 	})
 })

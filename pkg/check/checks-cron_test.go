@@ -30,7 +30,7 @@ var _ = Describe("CheckCron", func() {
 
 	BeforeEach(func() {
 		creator = &mocks.CheckCreator{}
-		creator.CreateChecksReturns(check.Checks{}, nil)
+		creator.CreateChecksReturns(check.CheckList{}, nil)
 		runner = &mocks.ChecksRunner{}
 
 		buf = &bytes.Buffer{}

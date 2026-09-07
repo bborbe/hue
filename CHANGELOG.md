@@ -9,6 +9,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * PATCH version when you make backwards-compatible bug fixes.
 
 
+## Unreleased
+
+- refactor: Rename the light-slice sort adapter `pkg.Lights` → `pkg.LightList` and the check aggregator `check.Checks` → `check.CheckList` per the `list-type-name` convention (call-sites, tests, and counterfeiter mocks updated); swap `pkg.TimeOfDay.Validate` to `github.com/bborbe/validation` (`validation.All`/`Name`/`NotNil`) with added contract tests
+
 ## v0.5.0
 
 - refactor: Migrate all hue Go code from the deprecated `github.com/golang/glog` logger to stdlib `log/slog` with explicit intent-based levels (Info for operator-facing output, Debug for state/heartbeat detail, Warn for failures) and structured key-value attributes

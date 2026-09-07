@@ -8,12 +8,13 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/bborbe/errors"
 	libtime "github.com/bborbe/time"
 )
 
 //counterfeiter:generate -o ../../mocks/checks-runner.go --fake-name ChecksRunner . ChecksRunner
 type ChecksRunner interface {
-	RunChecks(ctx context.Context, checks Checks) error
+	RunChecks(ctx context.Context, checks CheckList) error
 }
 
 func NewChecksRunner(currentDateTimeGetter libtime.CurrentDateTimeGetter) ChecksRunner {
@@ -26,7 +27,7 @@ type checksRunner struct {
 	currentDateTimeGetter libtime.CurrentDateTimeGetter
 }
 
-func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {
+func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
 	for _, check := range checks {
 		select {
 		case <-ctx.Done():
@@ -34,7 +35,7 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {
 		default:
 			satisfied, err := check.Satisfied(ctx)
 			if err != nil {
-				return err
+				return errors.Wrapf(ctx, err, "check %s satisfied failed", check.Name())
 			}
 			if satisfied {
 				slog.Debug("check satisfied, skip", "check", check.Name())
@@ -42,7 +43,7 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks Checks) error {
 			}
 			slog.Debug("check not satisfied, apply", "check", check.Name())
 			if err := check.Apply(ctx); err != nil {
-				return err
+				return errors.Wrapf(ctx, err, "check %s apply failed", check.Name())
 			}
 			slog.Debug("check applied", "check", check.Name())
 		}
