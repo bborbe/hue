@@ -8,6 +8,9 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## Unreleased
+
+- feat: Add `DRY_RUN` env var / `-dry-run` CLI flag that makes the checks runner log each unsatisfied check's intended action at Info level instead of calling `Apply`, so the controller can run against a real bridge without changing any light. Defaults to `false`; `k8s/hue-deploy.yaml` pins it to `"false"` so production behavior is unchanged.
 
 ## v0.6.0
 
