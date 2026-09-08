@@ -17,14 +17,19 @@ type ChecksRunner interface {
 	RunChecks(ctx context.Context, checks CheckList) error
 }
 
-func NewChecksRunner(currentDateTimeGetter libtime.CurrentDateTimeGetter) ChecksRunner {
+func NewChecksRunner(
+	currentDateTimeGetter libtime.CurrentDateTimeGetter,
+	dryRun bool,
+) ChecksRunner {
 	return &checksRunner{
 		currentDateTimeGetter: currentDateTimeGetter,
+		dryRun:                dryRun,
 	}
 }
 
 type checksRunner struct {
 	currentDateTimeGetter libtime.CurrentDateTimeGetter
+	dryRun                bool
 }
 
 func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
@@ -39,6 +44,10 @@ func (c *checksRunner) RunChecks(ctx context.Context, checks CheckList) error {
 			}
 			if satisfied {
 				slog.Debug("check satisfied, skip", "check", check.Name())
+				continue
+			}
+			if c.dryRun {
+				slog.Info("dry-run, skip apply", "check", check.Name())
 				continue
 			}
 			slog.Debug("check not satisfied, apply", "check", check.Name())

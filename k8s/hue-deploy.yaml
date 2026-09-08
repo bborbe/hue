@@ -51,6 +51,12 @@ spec:
             # evening-only window (20:00-23:00, set to "true" for heat waves).
             - name: SUMMER_MODE
               value: "false"
+            # DRY_RUN makes the controller compute and log the desired light
+            # state without changing any light. Set to "true" for a dev deploy
+            # that exercises the full reconcile pipeline against the real
+            # bridge without touching the house.
+            - name: DRY_RUN
+              value: "false"
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

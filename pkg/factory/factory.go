@@ -28,6 +28,7 @@ func CreateCheckController(
 	token pkg.Token,
 	inverval time.Duration,
 	summerMode bool,
+	dryRun bool,
 	currentDateTimeGetter libtime.CurrentDateTimeGetter,
 	location *time.Location,
 	sunriseSunsetProvider pkg.SunriseSunsetProvider,
@@ -45,7 +46,7 @@ func CreateCheckController(
 			location,
 			sunriseSunsetProvider,
 		),
-		check.NewChecksRunner(currentDateTimeGetter),
+		check.NewChecksRunner(currentDateTimeGetter, dryRun),
 		inverval,
 		samplerFactory,
 	)
