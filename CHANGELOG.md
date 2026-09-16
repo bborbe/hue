@@ -12,6 +12,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - feat: Add `DRY_RUN` env var / `-dry-run` CLI flag that makes the checks runner log each unsatisfied check's intended action at Info level instead of calling `Apply`, so the controller can run against a real bridge without changing any light. Defaults to `false`; `k8s/hue-deploy.yaml` pins it to `"false"` so production behavior is unchanged.
 
+## Unreleased
+
+- chore: update github.com/bborbe/run to v1.10.3, github.com/bborbe/sentry to v1.10.2, github.com/bborbe/validation to v1.5.1
+
 ## v0.6.0
 
 - refactor: Rename the light-slice sort adapter `pkg.Lights` → `pkg.LightList` and the check aggregator `check.Checks` → `check.CheckList` per the `list-type-name` convention (call-sites, tests, and counterfeiter mocks updated); swap `pkg.TimeOfDay.Validate` to `github.com/bborbe/validation` (`validation.All`/`Name`/`NotNil`) with added contract tests
