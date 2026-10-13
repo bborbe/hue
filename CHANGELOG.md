@@ -8,6 +8,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
+## Unreleased
+
+- chore: update Go to 1.27.2 and github.com/bborbe/errors to v1.6.3, github.com/bborbe/http to v1.26.27, github.com/bborbe/log to v1.7.3, github.com/bborbe/metrics to v0.6.6, github.com/bborbe/sentry to v1.10.3, github.com/bborbe/time to v1.27.16, github.com/onsi/ginkgo/v2 to v2.33.1, github.com/prometheus/client_golang to v1.25.0
+
 ## v0.7.1
 
 - chore: update github.com/bborbe/log to v1.7.1, github.com/bborbe/run to v1.11.0, github.com/bborbe/sentry to v1.10.2, github.com/bborbe/service to v1.10.14, github.com/bborbe/validation to v1.5.2, github.com/onsi/ginkgo/v2 to v2.33.0, github.com/onsi/gomega to v1.44.0
