@@ -1,6 +1,6 @@
 module github.com/bborbe/hue
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/amimof/huego v1.2.1
@@ -9,9 +9,9 @@ require (
 	github.com/bborbe/log v1.7.4
 	github.com/bborbe/metrics v0.6.7
 	github.com/bborbe/run v1.11.2
-	github.com/bborbe/sentry v1.10.4
+	github.com/bborbe/sentry v1.10.5
 	github.com/bborbe/service v1.11.0
-	github.com/bborbe/time v1.27.16
+	github.com/bborbe/time v1.27.17
 	github.com/bborbe/validation v1.5.5
 	github.com/gorilla/mux v1.8.1
 	github.com/kelvins/sunrisesunset v0.0.0-20230419165732-4d545fa3ee7d
