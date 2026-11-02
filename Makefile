@@ -214,6 +214,7 @@ else
 endif
 
 .PHONY: apply
+ifeq ($(BUILD_TARGET),local)
 apply:
 	@for i in $(DIRS); do \
 		cd $$i; \
@@ -221,3 +222,13 @@ apply:
 		make apply; \
 		cd ..; \
 	done
+else
+# A cluster build pushes $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION), but
+# k8s/hue-deploy.yaml renders the image from k8s.env's DOCKER_REGISTRY and the exported
+# BRANCH — a different registry and a different tag. Applying it here would deploy an
+# image this run never built, so `make buca BUILD_TARGET=<cluster>` stops after the push.
+apply:
+	@echo "apply: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job pushed $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION)."
+	@echo "  k8s/hue-deploy.yaml renders \$$(DOCKER_REGISTRY)/\$$(IMAGE):\$$(BRANCH), which is not the image this run built."
+	@echo "  Deploy deliberately once the cluster build has been verified."
+endif

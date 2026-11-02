@@ -11,6 +11,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 - feat: build the image on a Kubernetes cluster with `make build BUILD_TARGET=<cluster> REF=<sha> VERSION=<tag>`, keeping the default local arm unchanged. `hack/build-cluster.sh`, `hack/cluster-alias.sh` and `hack/build-job.yaml` are vendored from `bborbe/agent-task-executor`
+- fix: the cluster arm guards `apply` as well as `upload` and `clean`. `make buca BUILD_TARGET=<cluster>` pushed `docker.io/bborbe/hue:<VERSION>` and then applied `k8s/hue-deploy.yaml`, which renders the image from `k8s.env`'s `DOCKER_REGISTRY` and the exported `BRANCH` — a different registry and a different tag from the one just built, so the deploy would have pulled an image this run never produced
 - fix: the cluster arm publishes to `docker.io/bborbe/hue`, not to the private mirror this repository defaults to. `DOCKER_REGISTRY` defaults to `docker.prod.nuke.benjamin-borbe.de:443` and `IMAGE` to the bare `hue`, so pinning only one half would either push to a registry the Job has no credential for or publish under `library/hue` rather than the `bborbe` account. `CLUSTER_DOCKER_REGISTRY` and `CLUSTER_IMAGE` carry both halves, and the local arm is untouched
 - fix: the Dockerfile builds in module mode instead of `-mod=vendor`. `vendor/` is gitignored, so a bare clone — which is what the cluster Job builds — has none and a vendor-mode build fails there. With no explicit flag Go still uses `vendor/` locally, so the local arm is unchanged
 
