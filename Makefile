@@ -3,6 +3,34 @@ IMAGE ?= hue
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD | tr '/' '-')
 DIRS += $(shell find */* -maxdepth 0 -name Makefile -exec dirname "{}" \;)
 
+# Which machine builds the image. `local` builds here with the local daemon; any
+# other value is a cluster alias (sun, nukedev, nukeprod) or a raw kubectl
+# context name, and the build runs as a Job there.
+BUILD_TARGET ?= local
+
+# Cluster-build inputs. The vendored cluster script defaults the namespace,
+# timeout and Dockerfile; the clone URL, tag and image come from this repository.
+BUILD_TIMEOUT ?= 3600
+BUILD_REPO_URL ?= https://github.com/bborbe/$(IMAGE).git
+BUILD_DOCKERFILE ?= Dockerfile
+BUILD_PUSH_SECRET ?= buildkit-push
+
+# The commit the cluster clones. Empty on purpose: the cluster arm must be told
+# which commit to build, and the script refuses to run without it.
+REF ?=
+
+# The tag the cluster pushes. Empty on purpose, and separate from BRANCH: a
+# cluster build must never overwrite the moving `:master` tag.
+VERSION ?=
+
+# ⚠️ The cluster arm publishes to Docker Hub, not to the private mirror this
+# repository defaults to. DOCKER_REGISTRY above is the mirror; a cluster build
+# would otherwise push `docker.prod.nuke.benjamin-borbe.de:443/hue`, which the
+# Job has no credential for, and would publish under the bare name `hue` rather
+# than `bborbe/hue`. Both halves are pinned for the cluster arm only.
+CLUSTER_DOCKER_REGISTRY ?= docker.io
+CLUSTER_IMAGE ?= bborbe/$(IMAGE)
+
 # Export BRANCH so k8s/Makefile's bash subshell sees it for
 # {{"BRANCH" | env}} template substitution in hue-deploy.yaml.
 export BRANCH
@@ -118,6 +146,7 @@ buca: build upload clean apply
 
 
 .PHONY: build
+ifeq ($(BUILD_TARGET),local)
 build: check-go-mod
 	DOCKER_BUILDKIT=1 \
 	docker build \
@@ -131,6 +160,29 @@ build: check-go-mod
 	--build-arg BUILD_DATE=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
 	-t $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH) \
 	-f Dockerfile .
+else
+build:
+	@if [ -z "$(REF)" ]; then \
+		echo "ERROR: REF is required for a cluster build — pass REF=<commit>" >&2; \
+		exit 1; \
+	fi
+	@if [ -z "$(VERSION)" ]; then \
+		echo "ERROR: VERSION is required for a cluster build — pass VERSION=<scratch-tag>." >&2; \
+		echo "  The cluster arm pushes, so an unset tag would overwrite a moving reference." >&2; \
+		exit 1; \
+	fi
+	BUILD_TARGET='$(BUILD_TARGET)' \
+	NAMESPACE='build' \
+	TIMEOUT='$(BUILD_TIMEOUT)' \
+	REPO_URL='$(BUILD_REPO_URL)' \
+	REF='$(REF)' \
+	TAG='$(VERSION)' \
+	DOCKERFILE='$(BUILD_DOCKERFILE)' \
+	IMAGE='$(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE)' \
+	PUSH='true' \
+	PUSH_SECRET='$(BUILD_PUSH_SECRET)' \
+	hack/build-cluster.sh
+endif
 
 .PHONY: check-go-mod
 check-go-mod:
@@ -144,14 +196,22 @@ check-go-mod:
 
 .PHONY: upload
 upload:
+ifeq ($(BUILD_TARGET),local)
 	docker push $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH)
+else
+	@echo "upload: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job already pushed $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION)"
+endif
 
 .PHONY: clean
 clean:
+ifeq ($(BUILD_TARGET),local)
 	docker rmi $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH) || true
 	# docker builder prune -a -f
 	docker builder prune --max-used-space 21474836480 -f || true
 	rm -rf vendor
+else
+	@echo "clean: skipped — BUILD_TARGET=$(BUILD_TARGET); no local image to remove"
+endif
 
 .PHONY: apply
 apply:
