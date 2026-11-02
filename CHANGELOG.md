@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.8.0
 
 - feat: build the image on a Kubernetes cluster with `make build BUILD_TARGET=<cluster> REF=<sha> VERSION=<tag>`, keeping the default local arm unchanged. `hack/build-cluster.sh`, `hack/cluster-alias.sh` and `hack/build-job.yaml` are vendored from `bborbe/agent-task-executor`
 - fix: the cluster arm guards `apply` as well as `upload` and `clean`. `make buca BUILD_TARGET=<cluster>` pushed `docker.io/bborbe/hue:<VERSION>` and then applied `k8s/hue-deploy.yaml`, which renders the image from `k8s.env`'s `DOCKER_REGISTRY` and the exported `BRANCH` — a different registry and a different tag from the one just built, so the deploy would have pulled an image this run never produced
