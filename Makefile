@@ -24,12 +24,12 @@ REF ?=
 VERSION ?=
 
 # ⚠️ The cluster arm publishes to Docker Hub, not to the private mirror this
-# repository defaults to. DOCKER_REGISTRY above is the mirror; a cluster build
-# would otherwise push `docker.prod.nuke.benjamin-borbe.de:443/hue`, which the
-# Job has no credential for, and would publish under the bare name `hue` rather
-# than `bborbe/hue`. Both halves are pinned for the cluster arm only.
-CLUSTER_DOCKER_REGISTRY ?= docker.io
-CLUSTER_IMAGE ?= bborbe/$(IMAGE)
+# repository defaults to. DOCKER_REGISTRY above is the base-image source; a
+# cluster build would otherwise push `docker.prod.nuke.benjamin-borbe.de:443/hue`,
+# which the Job has no credential for, and would publish under the bare name
+# `hue` rather than `bborbe/hue`. PUSH_REGISTRY is the push target, and applies
+# to the cluster arm only.
+PUSH_REGISTRY ?= docker.io
 
 # Export BRANCH so k8s/Makefile's bash subshell sees it for
 # {{"BRANCH" | env}} template substitution in hue-deploy.yaml.
@@ -178,7 +178,8 @@ build:
 	REF='$(REF)' \
 	TAG='$(VERSION)' \
 	DOCKERFILE='$(BUILD_DOCKERFILE)' \
-	IMAGE='$(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE)' \
+	DOCKER_REGISTRY='$(DOCKER_REGISTRY)' \
+	IMAGE='$(PUSH_REGISTRY)/bborbe/$(IMAGE)' \
 	PUSH='true' \
 	PUSH_SECRET='$(BUILD_PUSH_SECRET)' \
 	hack/build-cluster.sh
@@ -199,7 +200,7 @@ upload:
 ifeq ($(BUILD_TARGET),local)
 	docker push $(DOCKER_REGISTRY)/$(IMAGE):$(BRANCH)
 else
-	@echo "upload: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job already pushed $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION)"
+	@echo "upload: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job already pushed $(PUSH_REGISTRY)/bborbe/$(IMAGE):$(VERSION)"
 endif
 
 .PHONY: clean
@@ -223,12 +224,12 @@ apply:
 		cd ..; \
 	done
 else
-# A cluster build pushes $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION), but
+# A cluster build pushes $(PUSH_REGISTRY)/bborbe/$(IMAGE):$(VERSION), but
 # k8s/hue-deploy.yaml renders the image from k8s.env's DOCKER_REGISTRY and the exported
 # BRANCH — a different registry and a different tag. Applying it here would deploy an
 # image this run never built, so `make buca BUILD_TARGET=<cluster>` stops after the push.
 apply:
-	@echo "apply: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job pushed $(CLUSTER_DOCKER_REGISTRY)/$(CLUSTER_IMAGE):$(VERSION)."
+	@echo "apply: skipped — BUILD_TARGET=$(BUILD_TARGET); the cluster Job pushed $(PUSH_REGISTRY)/bborbe/$(IMAGE):$(VERSION)."
 	@echo "  k8s/hue-deploy.yaml renders \$$(DOCKER_REGISTRY)/\$$(IMAGE):\$$(BRANCH), which is not the image this run built."
 	@echo "  Deploy deliberately once the cluster build has been verified."
 endif
