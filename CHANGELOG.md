@@ -8,7 +8,7 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-## Unreleased
+## v0.9.0
 
 - fix: split the cluster build arm's registry configuration into a base-image source and a push target. `DOCKER_REGISTRY` now names only the base-image source and is passed to the build Job as a build arg, while the new `PUSH_REGISTRY` names where the built image is published (default `docker.io`), so the published image is `docker.io/bborbe/hue`; the local arm is unchanged
 
