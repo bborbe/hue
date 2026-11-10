@@ -12,6 +12,10 @@ Please choose versions by [Semantic Versioning](http://semver.org/).
 
 - feat: `make build` resolves `BUILD_TARGET` from a bounded sun probe - sun when reachable, local docker as the fallback. An explicit `BUILD_TARGET` always wins, and the decision prints at parse time so it is visible under `make -n`
 
+## v0.9.2
+
+- chore: update github.com/bborbe/http to v1.26.33, github.com/bborbe/log to v1.7.8, github.com/bborbe/metrics to v0.6.10, github.com/bborbe/run to v1.11.10, github.com/bborbe/time to v1.27.26, github.com/bborbe/validation to v1.5.9, github.com/onsi/ginkgo/v2 to v2.34.0
+
 ## v0.9.1
 
 - chore: restate the do-not-merge contract in the gate workflow
